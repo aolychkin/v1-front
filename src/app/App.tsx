@@ -1,5 +1,5 @@
 import React from 'react';
-import { WithRouter } from './router/WithRouter';
+import { WithRouter } from 'app/router/WithRouter';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 import { CssBaseline } from '@mui/joy';
 import '@fontsource/inter';

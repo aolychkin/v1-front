@@ -1,12 +1,16 @@
-import { Stack, Divider } from "@mui/joy"
-import { TColumn } from "../types"
+import { Stack, Divider, Typography } from "@mui/joy"
+import { TCard, TColumn } from "../model/types"
 import { ActionCard } from "./card"
 
+
+//TOOD: вся колонка может быть таргетом перетаскивания
 export const ActionColumn = (
   {
-    data
+    column,
+    cards
   }: {
-    data: TColumn
+    column: TColumn;
+    cards: TCard[]
   }
 ) => {
   return (
@@ -21,8 +25,9 @@ export const ActionColumn = (
         padding: '1vw',
       }}
     >
+      <Typography>{column.title}</Typography>
       {
-        data.cards.map((card) => (
+        cards.map((card) => (
           <ActionCard key={card.id} card={card} />
         ))
       }

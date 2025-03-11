@@ -12,7 +12,7 @@ import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { useEffect, useRef, useState, RefObject } from "react";
 import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import invariant from "tiny-invariant";
-import { TCard } from "../types";
+import { TCard } from "../model/types";
 import { createPortal } from "react-dom";
 
 type TCardState =
@@ -66,7 +66,7 @@ const Display = (
           transform: state.type === "preview" ? 'rotate(4deg)' : '',
         }}>
         <CardContent>
-          <Typography level='title-md'>{card.description}</Typography>
+          <Typography level='title-md'>{card.description}, column:{card.columnID}, order {card.order}</Typography>
         </CardContent>
       </Card>
       {state.type === 'is-over' && state.closestEdge === 'bottom' ? (

@@ -25,7 +25,7 @@ export const ActionBoard = () => {
         })
 
         console.log(reordered)
-        setData({ ...data, cards: reordered })
+        setData({ ...data, columns: reordered })
       }
     });
   }, []);
@@ -34,7 +34,7 @@ export const ActionBoard = () => {
     <Stack direction="row" spacing={2}>
       {
         data.columns.map((col: TColumn) => (
-          <ActionColumn key={col.id} column={col} cards={data.cards.filter((item: TCard) => item.columnID === col.id)} />
+          <ActionColumn key={col.id} column={col} />
         ))
       }
     </Stack>

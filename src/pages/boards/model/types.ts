@@ -8,11 +8,11 @@ export type TCard = {
 export type TColumn = {
   id: string;
   title: string;
+  cards: TCard[];
 };
 
 export type TBoard = {
   columns: TColumn[];
-  cards: TCard[];
 };
 
 export const objToTCard = (obj: any) => {

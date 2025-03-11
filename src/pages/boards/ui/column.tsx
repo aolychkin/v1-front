@@ -7,10 +7,8 @@ import { ActionCard } from "./card"
 export const ActionColumn = (
   {
     column,
-    cards
   }: {
     column: TColumn;
-    cards: TCard[]
   }
 ) => {
   return (
@@ -27,7 +25,7 @@ export const ActionColumn = (
     >
       <Typography>{column.title}</Typography>
       {
-        cards.map((card) => (
+        column.cards.map((card) => (
           <ActionCard key={card.id} card={card} />
         ))
       }

@@ -1,3 +1,5 @@
+import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types";
+
 export type TCard = {
   id: string;
   description: string;
@@ -8,11 +10,11 @@ export type TCard = {
 export type TColumn = {
   id: string;
   title: string;
-  cards: TCard[];
 };
 
 export type TBoard = {
   columns: TColumn[];
+  cards: TCard[];
 };
 
 export const objToTCard = (obj: any) => {
@@ -28,3 +30,46 @@ export const objToTCard = (obj: any) => {
     return <TCard>{}
   }
 }
+
+export const objToTColumn = (obj: any) => {
+  try {
+    return <TColumn>{
+      id: obj.id,
+      title: obj.title,
+    }
+  } catch {
+    console.log("Can't func (objToTColumn)")
+    return <TColumn>{}
+  }
+}
+
+export type TCardState =
+  | {
+    type: 'idle';
+  }
+  | {
+    type: 'is-dragging';
+  }
+  | {
+    type: 'is-dragging-and-left-self';
+  }
+  | {
+    type: 'is-over';
+    // dragging: DOMRect; // TODO: получить высоту элемента. Этот параметр нужен только для этого.
+    closestEdge: Edge;
+  }
+  | {
+    type: 'preview';
+    container: HTMLElement;
+    // dragging: DOMRect;
+  };
+
+export type TColumnState =
+  | {
+    type: 'column-idle';
+  }
+  | {
+    type: 'is-card-over';
+    isOverChildCard: boolean;
+    // dragging: DOMRect; // TODO: получить высоту элемента. Этот параметр нужен только для этого.
+  };

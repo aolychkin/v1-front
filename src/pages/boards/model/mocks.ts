@@ -38,6 +38,7 @@ import data from './Board.json'
 export const getMockData = (): TBoard => {
   const board: TBoard = {
     columns: data.columns,
+    cards: data.cards,
   }
   return board
 }

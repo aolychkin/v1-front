@@ -1,4 +1,4 @@
-import { Card, CardContent, Stack, Typography } from "@mui/joy"
+import { Box, Card, CardContent, Skeleton, Stack, Typography } from "@mui/joy"
 
 import {
   type Edge,
@@ -12,29 +12,9 @@ import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { useEffect, useRef, useState, RefObject } from "react";
 import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import invariant from "tiny-invariant";
-import { TCard } from "../model/types";
+import { TCard, TCardState, objToTCard } from "../model/types";
 import { createPortal } from "react-dom";
-
-type TCardState =
-  | {
-    type: 'idle';
-  }
-  | {
-    type: 'is-dragging';
-  }
-  | {
-    type: 'is-dragging-and-left-self';
-  }
-  | {
-    type: 'is-over';
-    // dragging: DOMRect; // TODO: получить высоту элемента. Этот параметр нужен только для этого.
-    closestEdge: Edge;
-  }
-  | {
-    type: 'preview';
-    container: HTMLElement;
-    // dragging: DOMRect;
-  };
+import { CardShadow } from "./card-shadow";
 
 const idle: TCardState = { type: "idle" }
 
@@ -51,28 +31,35 @@ const Display = (
     innerRef?: RefObject<HTMLDivElement | null>;
   }
 ) => {
-  // if (state.type === 'is-over') {
-  //   console.log("IS OVER")
-  // }
-
+  var cardSpacing = "8px"
   return (
-    <Stack ref={outerRef}>
+    <Stack ref={outerRef} sx={state.type === 'is-dragging-and-left-self' ? { visibility: 'hidden', display: 'none' } : undefined}>
       {state.type === 'is-over' && state.closestEdge === 'top' ? (
-        <Typography>Test</Typography>
+        <CardShadow cardSpacing={cardSpacing} />
       ) : null}
       <Card ref={innerRef}
         sx={{
-          opacity: state.type === "is-dragging" ? 0.5 : 1.0,
-          transform: state.type === "preview" ? 'rotate(4deg)' : '',
+          marginY: cardSpacing,
+          ...(state.type === 'preview' &&
+          {
+            opacity: 0.5,
+            transform: 'rotate(4deg)',
+          }),
+          ...(state.type === 'is-dragging' &&
+          {
+            opacity: 0.3
+          })
         }}>
         <CardContent>
           <Typography level='title-md'>{card.description}, column:{card.columnID}, order {card.order}</Typography>
         </CardContent>
       </Card>
-      {state.type === 'is-over' && state.closestEdge === 'bottom' ? (
-        <Typography>Test</Typography>
-      ) : null}
-    </Stack>
+      {
+        state.type === 'is-over' && state.closestEdge === 'bottom' ? (
+          <CardShadow cardSpacing={cardSpacing} />
+        ) : null
+      }
+    </Stack >
   )
 }
 
@@ -119,24 +106,45 @@ export const ActionCard = (
         element: outer,
         getIsSticky: () => true, //Хз что делает стики, но видел в доке
         getData: ({ element, input }) => {
-          const data = card
+          const data = { ...card, type: "card" }
           return attachClosestEdge(data, { element, input, allowedEdges: ['top', 'bottom'] });
         },
         onDragEnter({ source, self }) {
+          if (objToTCard(source.data.card).id === card.id) {
+            return;
+          }
           const closestEdge = extractClosestEdge(self.data);
           if (!closestEdge) {
             return;
           }
           setState({ type: 'is-over', closestEdge });
         },
+        // source = передвигаемая карточка, self - принимающая
         onDrag({ source, self }) {
+          if (objToTCard(source.data.card).id === objToTCard(self.data).id) {
+            // console.log("Dragging source", objToTCard(source.data.card).id)
+            return;
+          }
           const closestEdge = extractClosestEdge(self.data);
           if (!closestEdge) {
             return;
           }
-          setState({ type: 'is-over', closestEdge });
+          // Не допускаем перезаписи состояния
+          const proposed: TCardState = { type: 'is-over', closestEdge };
+          setState((current) => {
+            if ((current.type === 'is-over') && (current.closestEdge === closestEdge)) {
+              // console.log("current")
+              return current;
+            }
+            // console.log("proposed")
+            return proposed;
+          });
         },
-        onDragLeave({ source }) {
+        onDragLeave({ source, self }) {
+          if (objToTCard(source.data.card).id === objToTCard(self.data).id) {
+            setState({ type: 'is-dragging-and-left-self' });
+            return;
+          }
           setState(idle);
         },
         onDrop() {

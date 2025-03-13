@@ -1,14 +1,16 @@
-import { ListItemDecorator, Stack, Tab, TabList, TabPanel, Tabs, Typography } from "@mui/joy"
+import { Accordion, AccordionDetails, AccordionGroup, AccordionSummary, Avatar, Card, CardContent, ListItem, ListItemContent, ListItemDecorator, Sheet, Stack, Tab, TabList, TabPanel, Tabs, Typography } from "@mui/joy"
 import { TCard, TColumn, objToTCard, objToTColumn } from "../model/types";
 import { ActionColumn } from "./column";
-import { getMockData } from "../model/mocks";
+import { getMockData, mockCardForConstruction } from "../model/mocks";
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect, useState } from "react";
 import { addCardInColumnBottom, reorderCardsWithEdge } from "../lib/reorder";
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import IconButton from '@mui/joy/IconButton'
-import { Columns3, RectangleHorizontal, Save, SaveOff, Settings, SquareKanban } from "lucide-react";
+import { Columns3, List, RectangleHorizontal, Save, Text, SaveOff, Settings, SquareKanban } from "lucide-react";
 import { UIBorderRadius } from "shared/ui/styles";
+import { ActionCardContent } from "./action-card-content";
+import { BoardSetting } from "./board-settings";
 
 //TODO: сделать настройку кастомную карточек и ее полей, настройку колонок + группировки
 //TODO BUG: если тянуть карточку за граница экрана (на вкладки браузера), то появляется ошибка
@@ -73,52 +75,9 @@ export const ActionBoard = () => {
 
   return (
     <Stack direction='column' spacing={2} sx={{ marginX: '16px' }}>
-      <Stack direction='column' spacing={2}>
-        <Stack direction='row' spacing={2}>
-          <IconButton>
-            <Settings />
-          </IconButton>
-        </Stack>
-        <Stack direction='column' spacing={2}>
-          <Stack direction='row'>
-            <Typography level='title-lg'>Настройки доски</Typography>
-            {/* <Save />
-          <SaveOff /> */}
-          </Stack>
-          <Tabs aria-label="Icon tabs" orientation='horizontal' defaultValue={2} sx={{ borderRadius: UIBorderRadius["primary"] }}>
-            <TabList>
-              <Tab value={0}>
-                <ListItemDecorator>
-                  <SquareKanban />
-                </ListItemDecorator>
-                Общее
-              </Tab>
-              <Tab value={1}>
-                <ListItemDecorator>
-                  <Columns3 />
-                </ListItemDecorator>
-                Колонки
-              </Tab>
-              <Tab value={2}>
-                <ListItemDecorator>
-                  <RectangleHorizontal />
-                </ListItemDecorator>
-                Карточки
-              </Tab>
-            </TabList>
-            <TabPanel value={0}>
-              IndicatorPlacement <b>Top</b>
-            </TabPanel>
-            <TabPanel value={1}>
-              IndicatorPlacement <b>Right</b>
-            </TabPanel>
-            <TabPanel value={2}>
-              Поля
-              Внешний вид
-            </TabPanel>
-          </Tabs>
-        </Stack>
-      </Stack>
+      {data.cardVisual &&
+        <BoardSetting visualConfig={data.cardVisual} />
+      }
       <Stack direction='row' spacing={2}>
         {
           data.columns.map((col: TColumn) => (

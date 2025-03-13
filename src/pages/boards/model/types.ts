@@ -30,10 +30,11 @@ export type TCardFields = {
 
 //TODO: типы визуализации тоже добавить. Соответственно для каждого поля / кастомного типа поля должен быть реализована визуализация = Nтипов * Nвизуализаций
 export type TCardCustomField = {
+  id: string;
   name: string;
   type: string;
   valueSource: string;
-  availableValues: string[]
+  availableValues: string[] // если ручной ввод, то здесь все введенные когда-либо значения в это поле (и существующие у задач сейчас)
 }
 
 export type TColumn = {
@@ -44,17 +45,24 @@ export type TColumn = {
 export type TBoard = {
   columns: TColumn[];
   cards: TCard[];
-  cardVisual?: {
-    parentID: string;
-    customConfig: TBoardCardVisual[]
-  };
+  cardVisual?: TCardVisualConfig;
 };
 
 //TODO: добавить валидацию по location при загрузке доски. Если на карточках нет таких полей - отображать серый блок с иконкой информации
-export type TBoardCardVisual = {
-  location: string;
-  visualization: string;
+export type TCardVisualConfig = {
+  parentID: string;
+  rows: TCardVisualConfigRow[]
 };
+export type TCardVisualConfigRow = {
+  rowOrder: number
+  slots: TCardVisualConfigSlot[]
+};
+export type TCardVisualConfigSlot = {
+  slotSize: number; //9:"max" | 5: "half" |3: "medium" |0: "min"
+  columnOrder: number
+  fieldID: string
+};
+
 
 export const objToTCard = (obj: any) => {
   try {

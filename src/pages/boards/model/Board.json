@@ -50,5 +50,60 @@
         "order": 2
       }
     }
-  ]
+  ],
+  "cardVisual": {
+    "parentID": "",
+    "rows": [
+      {
+        "rowOrder": 1,
+        "slots": [
+          {
+            "slotSize": 9,
+            "columnOrder": 1,
+            "fieldID": "title"
+          }
+        ]
+      },
+      {
+        "rowOrder": 2,
+        "slots": [
+          {
+            "slotSize": 9,
+            "columnOrder": 1,
+            "fieldID": "title"
+          }
+        ]
+      },
+      {
+        "rowOrder": 3,
+        "slots": [
+          {
+            "slotSize": 5,
+            "columnOrder": 1,
+            "fieldID": "title"
+          }
+        ]
+      },
+      {
+        "rowOrder": 4,
+        "slots": [
+          {
+            "slotSize": 3,
+            "columnOrder": 1,
+            "fieldID": "title"
+          }
+        ]
+      },
+      {
+        "rowOrder": 5,
+        "slots": [
+          {
+            "slotSize": 0,
+            "columnOrder": 1,
+            "fieldID": "title"
+          }
+        ]
+      }
+    ]
+  }
 }

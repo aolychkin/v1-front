@@ -1,11 +1,40 @@
 import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types";
 
+// meta - служебные поля. Мб потом убрать из мета creator и createdAt (обновляются только 1 раз)
 export type TCard = {
   id: string;
-  description: string;
+  title: string;
+  meta: TCardMeta;
+  fields?: TCardFields;
+  content?: string[];
+  activity?: string[];
+};
+
+export type TCardMeta = {
   columnID: string;
   order: number;
-};
+  creator?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  updatedItem?: string;
+}
+
+export type TCardFields = {
+  project?: string;
+  type?: string;
+  board?: string;
+  sprint?: string;
+  assignee?: string;
+  customFields: TCardCustomField[];
+}
+
+//TODO: типы визуализации тоже добавить. Соответственно для каждого поля / кастомного типа поля должен быть реализована визуализация = Nтипов * Nвизуализаций
+export type TCardCustomField = {
+  name: string;
+  type: string;
+  valueSource: string;
+  availableValues: string[]
+}
 
 export type TColumn = {
   id: string;
@@ -15,18 +44,31 @@ export type TColumn = {
 export type TBoard = {
   columns: TColumn[];
   cards: TCard[];
+  cardVisual?: {
+    parentID: string;
+    customConfig: TBoardCardVisual[]
+  };
+};
+
+//TODO: добавить валидацию по location при загрузке доски. Если на карточках нет таких полей - отображать серый блок с иконкой информации
+export type TBoardCardVisual = {
+  location: string;
+  visualization: string;
 };
 
 export const objToTCard = (obj: any) => {
   try {
+    // console.log(obj)
     return <TCard>{
       id: obj.id,
-      description: obj.description,
-      columnID: obj.columnID,
-      order: obj.order,
+      title: obj.title,
+      meta: <TCardMeta>{
+        columnID: obj.meta.columnID,
+        order: obj.meta.order,
+      }
     }
-  } catch {
-    console.log("Can't func (objToTCard)")
+  } catch (e) {
+    console.log("Can't func objToTCard())", e, obj)
     return <TCard>{}
   }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { TCard, TColumn, TColumnState } from "../model/types"
-import { ActionCard } from "./card"
+import { ActionCard } from "./action-card"
 import { Divider, Stack, Typography } from "@mui/joy"
 
 import {
@@ -19,6 +19,7 @@ import { TCardState, objToTCard } from "../model/types";
 import { createPortal } from "react-dom";
 import { CardShadow } from "./card-shadow";
 import { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
+import { UIBorderRadius, UIColor } from "shared/ui/styles";
 
 const idle: TColumnState = { type: 'column-idle' }
 
@@ -42,9 +43,8 @@ export const ActionColumn = (
 
     function setIsCardOver({ data, location }: { data: TCard; location: DragLocationHistory }) {
       const innerMost = location.current.dropTargets[0];
-      // console.log(innerMost.data)
       //Есть целью является конкретная карточка, а не колонка в целом
-      const isOverChildCard = Boolean(innerMost.data.type === 'card');
+      const isOverChildCard = Boolean(innerMost && innerMost.data.type === 'card');
 
       const proposed: TColumnState = {
         type: 'is-card-over',
@@ -61,29 +61,27 @@ export const ActionColumn = (
 
     dropTargetForElements({
       element: columnRef,
-      getIsSticky: () => true, //Хз что делает стики, но видел в доке
+      getIsSticky: () => true,
       getData: ({ element, input }) => {
         const data = { ...column, type: "column" }
         return attachClosestEdge(data, { element, input, allowedEdges: ['top', 'bottom'] });
       },
       onDragStart({ source, location }) {
-        setIsCardOver({ data: objToTCard(source.data), location })
+        setIsCardOver({ data: objToTCard(source.data.card), location })
       },
       onDragEnter({ source, location }) {
-        setIsCardOver({ data: objToTCard(source.data), location })
+        setIsCardOver({ data: objToTCard(source.data.card), location })
         return;
       },
       onDropTargetChange({ source, location }) {
-        setIsCardOver({ data: objToTCard(source.data), location })
+        setIsCardOver({ data: objToTCard(source.data.card), location })
         return;
       },
-      onDragLeave({ source }) {
+      onDragLeave() {
         setState(idle);
       },
-      onDrop({ source, location }) {
+      onDrop() {
         setState(idle);
-        // console.log(location)
-        // console.log(source.data)
       },
     })
   }, []);
@@ -91,10 +89,13 @@ export const ActionColumn = (
     <Stack
       direction="column"
       sx={{
-        justifyContent: "flex-start",
-        alignItems: "column",
-        background: '#F6F6F6',
-        padding: '1vw',
+        justifyContent: 'flex-start',
+        alignItems: 'column',
+        background: UIColor["tiny-gray"],
+        padding: '8px',
+        width: '330px',
+        minHeight: '64px',
+        borderRadius: UIBorderRadius["primary"]
       }}
     >
       <Typography>{column.title}</Typography>
@@ -103,9 +104,12 @@ export const ActionColumn = (
         ref={columnUseRef}
         direction='column'
         sx={{
-          paddingTop: "8px",
-          background: '#FFFFFF',
-          height: "100%"
+          marginY: '8px',
+          background: UIColor["tiny-gray"],
+          height: "100%",
+          ...(state.type === 'is-card-over' && {
+            background: UIColor["tiny-primary"],
+          })
         }}
       >
         {

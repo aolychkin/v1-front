@@ -1,11 +1,14 @@
-import { Stack } from "@mui/joy"
-import { TBoard, TCard, TColumn, objToTCard, objToTColumn } from "../model/types";
+import { ListItemDecorator, Stack, Tab, TabList, TabPanel, Tabs, Typography } from "@mui/joy"
+import { TCard, TColumn, objToTCard, objToTColumn } from "../model/types";
 import { ActionColumn } from "./column";
 import { getMockData } from "../model/mocks";
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect, useState } from "react";
 import { addCardInColumnBottom, reorderCardsWithEdge } from "../lib/reorder";
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import IconButton from '@mui/joy/IconButton'
+import { Columns3, RectangleHorizontal, Save, SaveOff, Settings, SquareKanban } from "lucide-react";
+import { UIBorderRadius } from "shared/ui/styles";
 
 //TODO: сделать настройку кастомную карточек и ее полей, настройку колонок + группировки
 //TODO BUG: если тянуть карточку за граница экрана (на вкладки браузера), то появляется ошибка
@@ -25,11 +28,11 @@ export const ActionBoard = () => {
         const currentCard = objToTCard(currentItem)
 
         const targetItem = location.current.dropTargets[0]
-        if (!targetItem) { //Хз, когда срабатывает
+        //Срабатывает, когда карточку выносят за рамки браузера (отслеживаемой созны)
+        if (!targetItem) {
           console.log("no targetItem in func ActionBoard()")
           return
         }
-
         if (targetItem.data.type === 'card') {
           const targetCard = objToTCard(targetItem.data)
           // Если перетащил карточку на то же место, в себя же
@@ -37,11 +40,11 @@ export const ActionBoard = () => {
             return
           }
           // Если перетащил карточку на то же место, но не в себя
-          if (currentCard.columnID === targetCard.columnID) {
-            if ((extractClosestEdge(targetItem.data) === 'top') && (currentCard.order - targetCard.order === -1)) {
+          if (currentCard.meta.columnID === targetCard.meta.columnID) {
+            if ((extractClosestEdge(targetItem.data) === 'top') && (currentCard.meta.order - targetCard.meta.order === -1)) {
               return
             }
-            if ((extractClosestEdge(targetItem.data) === 'bottom') && (currentCard.order - targetCard.order === 1)) {
+            if ((extractClosestEdge(targetItem.data) === 'bottom') && (currentCard.meta.order - targetCard.meta.order === 1)) {
               return
             }
           }
@@ -52,9 +55,8 @@ export const ActionBoard = () => {
             targetCard: targetCard,
             edge: extractClosestEdge(targetItem.data),
           })
-          // console.log(reordered)
           setData({ ...data, cards: reordered })
-        } else {
+        } else if (targetItem.data.type === 'column') {
           const targetColumn = objToTColumn(targetItem.data)
           const reordered = addCardInColumnBottom({
             board: data,
@@ -62,18 +64,68 @@ export const ActionBoard = () => {
             targetColumn: targetColumn
           })
           setData({ ...data, cards: reordered })
+        } else {
+          console.log("Target is not Card or Column in func ActionBoard()")
         }
       }
     });
   }, []);
 
   return (
-    <Stack direction="row" spacing={2}>
-      {
-        data.columns.map((col: TColumn) => (
-          <ActionColumn key={col.id} column={col} cards={data.cards.filter((item: TCard) => item.columnID === col.id).sort((a, b) => a.order - b.order)} />
-        ))
-      }
+    <Stack direction='column' spacing={2} sx={{ marginX: '16px' }}>
+      <Stack direction='column' spacing={2}>
+        <Stack direction='row' spacing={2}>
+          <IconButton>
+            <Settings />
+          </IconButton>
+        </Stack>
+        <Stack direction='column' spacing={2}>
+          <Stack direction='row'>
+            <Typography level='title-lg'>Настройки доски</Typography>
+            {/* <Save />
+          <SaveOff /> */}
+          </Stack>
+          <Tabs aria-label="Icon tabs" orientation='horizontal' defaultValue={2} sx={{ borderRadius: UIBorderRadius["primary"] }}>
+            <TabList>
+              <Tab value={0}>
+                <ListItemDecorator>
+                  <SquareKanban />
+                </ListItemDecorator>
+                Общее
+              </Tab>
+              <Tab value={1}>
+                <ListItemDecorator>
+                  <Columns3 />
+                </ListItemDecorator>
+                Колонки
+              </Tab>
+              <Tab value={2}>
+                <ListItemDecorator>
+                  <RectangleHorizontal />
+                </ListItemDecorator>
+                Карточки
+              </Tab>
+            </TabList>
+            <TabPanel value={0}>
+              IndicatorPlacement <b>Top</b>
+            </TabPanel>
+            <TabPanel value={1}>
+              IndicatorPlacement <b>Right</b>
+            </TabPanel>
+            <TabPanel value={2}>
+              Поля
+              Внешний вид
+            </TabPanel>
+          </Tabs>
+        </Stack>
+      </Stack>
+      <Stack direction='row' spacing={2}>
+        {
+          data.columns.map((col: TColumn) => (
+            <ActionColumn key={col.id} column={col} cards={data.cards.filter((item: TCard) => item.meta.columnID === col.id).sort((a, b) => a.meta.order - b.meta.order)} />
+          ))
+        }
+      </Stack>
     </Stack>
   )
 }

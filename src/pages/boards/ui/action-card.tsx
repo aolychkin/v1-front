@@ -15,6 +15,7 @@ import invariant from "tiny-invariant";
 import { TCard, TCardState, objToTCard } from "../model/types";
 import { createPortal } from "react-dom";
 import { CardShadow } from "./card-shadow";
+import { ActionCardContent } from "./action-card-content";
 
 const idle: TCardState = { type: "idle" }
 
@@ -50,9 +51,7 @@ const Display = (
             opacity: 0.3
           })
         }}>
-        <CardContent>
-          <Typography level='title-md'>{card.description}, column:{card.columnID}, order {card.order}</Typography>
-        </CardContent>
+        <ActionCardContent card={card} />
       </Card>
       {
         state.type === 'is-over' && state.closestEdge === 'bottom' ? (
@@ -97,14 +96,16 @@ export const ActionCard = (
             },
           });
         },
-        onDragStart: () => setState({ type: 'is-dragging' }),
+        onDragStart: () => {
+          setState({ type: 'is-dragging' })
+        },
         onDrop: () => {
           setState(idle)
         },
       }),
       dropTargetForElements({
         element: outer,
-        getIsSticky: () => true, //Хз что делает стики, но видел в доке
+        getIsSticky: () => true,
         getData: ({ element, input }) => {
           const data = { ...card, type: "card" }
           return attachClosestEdge(data, { element, input, allowedEdges: ['top', 'bottom'] });
@@ -122,7 +123,6 @@ export const ActionCard = (
         // source = передвигаемая карточка, self - принимающая
         onDrag({ source, self }) {
           if (objToTCard(source.data.card).id === objToTCard(self.data).id) {
-            // console.log("Dragging source", objToTCard(source.data.card).id)
             return;
           }
           const closestEdge = extractClosestEdge(self.data);
@@ -133,10 +133,8 @@ export const ActionCard = (
           const proposed: TCardState = { type: 'is-over', closestEdge };
           setState((current) => {
             if ((current.type === 'is-over') && (current.closestEdge === closestEdge)) {
-              // console.log("current")
               return current;
             }
-            // console.log("proposed")
             return proposed;
           });
         },

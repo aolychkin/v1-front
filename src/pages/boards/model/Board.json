@@ -12,33 +12,43 @@
   "cards": [
     {
       "id": "1",
-      "description": "1st",
-      "columnID": "1",
-      "order": 1
+      "title": "1st",
+      "meta": {
+        "columnID": "1",
+        "order": 1
+      }
     },
     {
       "id": "3",
-      "description": "3st",
-      "columnID": "1",
-      "order": 2
+      "title": "3st",
+      "meta": {
+        "columnID": "1",
+        "order": 2
+      }
     },
     {
       "id": "4",
-      "description": "4st",
-      "columnID": "1",
-      "order": 3
+      "title": "4st",
+      "meta": {
+        "columnID": "1",
+        "order": 3
+      }
     },
     {
       "id": "2",
-      "description": "2st",
-      "columnID": "2",
-      "order": 1
+      "title": "2st",
+      "meta": {
+        "columnID": "2",
+        "order": 1
+      }
     },
     {
       "id": "5",
-      "description": "5st",
-      "columnID": "2",
-      "order": 2
+      "title": "5st",
+      "meta": {
+        "columnID": "2",
+        "order": 2
+      }
     }
   ]
 }

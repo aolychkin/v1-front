@@ -3,39 +3,84 @@ import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types"
 // meta - служебные поля. Мб потом убрать из мета creator и createdAt (обновляются только 1 раз)
 export type TCard = {
   id: string;
-  title: string;
   meta: TCardMeta;
-  fields?: TCardFields;
-  content?: string[];
+  fields: TCardField[];
   activity?: string[];
 };
-
 export type TCardMeta = {
+  type: string;
+  project: string;
+  board: string;
   columnID: string;
   order: number;
-  creator?: string;
+  sprint?: string;
+  createdBy?: string;
   createdAt?: string;
   updatedAt?: string;
+  updatedBy?: string;
   updatedItem?: string;
 }
 
-export type TCardFields = {
-  project?: string;
-  type?: string;
-  board?: string;
-  sprint?: string;
-  assignee?: string;
-  customFields: TCardCustomField[];
+//TODO: !!! Хранить только field Id, value и visual
+// Три сущности: тип, настройка типа, значение типа на карточке + его используемость
+// Принадлежит карточке
+export type TCardField = {
+  id: string;
+  configID: string;
+  value?: string[];
 }
-
-//TODO: типы визуализации тоже добавить. Соответственно для каждого поля / кастомного типа поля должен быть реализована визуализация = Nтипов * Nвизуализаций
-export type TCardCustomField = {
+//Настраивает пользователь
+export type TCardFieldConfig = {
   id: string;
   name: string;
-  type: string;
-  valueSource: string;
-  availableValues: string[] // если ручной ввод, то здесь все введенные когда-либо значения в это поле (и существующие у задач сейчас)
+  alias: string;
+  valueTypeID: string;
+  defaultValue: string;
+  valueSource: string; //Если источник данных подтягивается из другого поля. МБ это availableValues
+  availableValues?: { //[]
+    color: string;
+    value: string;
+  }; // если ручной ввод, то здесь все введенные когда-либо значения в это поле (и существующие у задач сейчас). МБ маску сюда же вставлять
+  visual: TCardFieldVisual;
 }
+//Настраиваю я в системе
+export type TCardFieldType = {
+  id: string;
+  name: string;
+  isCustom: boolean;
+  availableSizes: number[];
+}
+
+//Generic type
+export type TCardFieldGroupedByRow = {
+  [key: string]: TCardField[]
+}
+
+export type TCardFieldVisual = {
+  board: TCardFieldVisualOnBoard;
+  modal: TCardFieldVisualInModal;
+}
+//Когда добавляю ROW в конструкторе, то добавляю его локальное. Нет привязанного поля - ничего не сохраняется. Есть - обновляется visual у поля
+export type TCardFieldVisualOnBoard = {
+  rowOrder: number;
+  columnOrder: number;
+  size: number; //12:"max" | 6: "half" |3: "medium" |1: "min"
+}
+export type TCardFieldVisualInModal = {
+  category: string; //Поля с описанием / Контекстные поля / Скрытые поля
+  order: number;
+}
+
+export type TCardFieldKey = keyof TCardField
+
+// export type TCardFields = {
+//   project?: string;
+//   type?: string;
+//   board?: string;
+//   sprint?: string;
+//   assignee?: string;
+//   customFields: TCardCustomField[];
+// }
 
 export type TColumn = {
   id: string;
@@ -45,35 +90,48 @@ export type TColumn = {
 export type TBoard = {
   columns: TColumn[];
   cards: TCard[];
-  cardVisual?: TCardVisualConfig;
+  fieldConfigs: TCardFieldConfig[];
+  fieldTypes: TCardFieldType[]
 };
 
-//TODO: добавить валидацию по location при загрузке доски. Если на карточках нет таких полей - отображать серый блок с иконкой информации
-export type TCardVisualConfig = {
-  parentID: string;
-  rows: TCardVisualConfigRow[]
-};
-export type TCardVisualConfigRow = {
-  rowOrder: number
-  slots: TCardVisualConfigSlot[]
-};
-export type TCardVisualConfigSlot = {
-  slotSize: number; //9:"max" | 5: "half" |3: "medium" |0: "min"
-  columnOrder: number
-  fieldID: string
-};
+// export type TBoard = {
+//   columns: TColumn[];
+//   cards: TCard[];
+//   cardVisual?: TCardVisualConfig;
+// };
 
+// //TODO: добавить валидацию по location при загрузке доски. Если на карточках нет таких полей - отображать серый блок с иконкой информации
+// //TODO: добавить свою модель под каждый тип поля
+// export type TCardVisualConfig = {
+//   parentID: string;
+//   rows: TCardVisualConfigRow[]
+// };
+// export type TCardVisualConfigRow = {
+//   order: number;
+//   slots?: TCardVisualConfigSlot[];
+// };
+// export type TCardVisualConfigSlot = {
+//   size: number;
+//   order: number
+//   fieldID?: string //TCardField
+// };
 
 export const objToTCard = (obj: any) => {
   try {
     // console.log(obj)
     return <TCard>{
       id: obj.id,
-      title: obj.title,
       meta: <TCardMeta>{
         columnID: obj.meta.columnID,
         order: obj.meta.order,
-      }
+      },
+      fields: <TCardField[]>[
+        {
+          id: "1",
+          configID: "1",
+          value: [obj.title],
+        }
+      ]
     }
   } catch (e) {
     console.log("Can't func objToTCard())", e, obj)

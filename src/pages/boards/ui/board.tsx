@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionGroup, AccordionSummary, Avatar, Card, CardContent, ListItem, ListItemContent, ListItemDecorator, Sheet, Stack, Tab, TabList, TabPanel, Tabs, Typography } from "@mui/joy"
 import { TCard, TColumn, objToTCard, objToTColumn } from "../model/types";
 import { ActionColumn } from "./column";
-import { getMockData, mockCardForConstruction } from "../model/mocks";
+import { getMockData } from "../model/mocks";
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect, useState } from "react";
 import { addCardInColumnBottom, reorderCardsWithEdge } from "../lib/reorder";
@@ -75,9 +75,7 @@ export const ActionBoard = () => {
 
   return (
     <Stack direction='column' spacing={2} sx={{ marginX: '16px' }}>
-      {data.cardVisual &&
-        <BoardSetting visualConfig={data.cardVisual} />
-      }
+      <BoardSetting />
       <Stack direction='row' spacing={2}>
         {
           data.columns.map((col: TColumn) => (

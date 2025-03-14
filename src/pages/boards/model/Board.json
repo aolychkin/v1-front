@@ -12,98 +12,58 @@
   "cards": [
     {
       "id": "1",
-      "title": "1st",
       "meta": {
+        "type": "Задача",
+        "project": "Проект 1",
+        "board": "Проект: БИОС",
+        "sprint": "спринт 1: 2025.04.01-2025.04.15",
         "columnID": "1",
         "order": 1
-      }
-    },
+      },
+      "fields": [
+        {
+          "id": "1",
+          "configID": "1",
+          "value": [
+            "First"
+          ]
+        }
+      ]
+    }
+  ],
+  "fieldConfigs": [
     {
-      "id": "3",
-      "title": "3st",
-      "meta": {
-        "columnID": "1",
-        "order": 2
-      }
-    },
-    {
-      "id": "4",
-      "title": "4st",
-      "meta": {
-        "columnID": "1",
-        "order": 3
-      }
-    },
-    {
-      "id": "2",
-      "title": "2st",
-      "meta": {
-        "columnID": "2",
-        "order": 1
-      }
-    },
-    {
-      "id": "5",
-      "title": "5st",
-      "meta": {
-        "columnID": "2",
-        "order": 2
+      "id": "1",
+      "name": "summary",
+      "alias": "Заголовок активности",
+      "valueTypeID": "1",
+      "defaultValue": "Без названия",
+      "valueSource": "manual",
+      "availableValues": {
+        "color": "red",
+        "value": "all"
+      },
+      "visual": {
+        "board": {
+          "rowOrder": 1,
+          "columnOrder": 1,
+          "size": 12
+        },
+        "modal": {
+          "category": "description",
+          "order": 0
+        }
       }
     }
   ],
-  "cardVisual": {
-    "parentID": "",
-    "rows": [
-      {
-        "rowOrder": 1,
-        "slots": [
-          {
-            "slotSize": 9,
-            "columnOrder": 1,
-            "fieldID": "title"
-          }
-        ]
-      },
-      {
-        "rowOrder": 2,
-        "slots": [
-          {
-            "slotSize": 9,
-            "columnOrder": 1,
-            "fieldID": "title"
-          }
-        ]
-      },
-      {
-        "rowOrder": 3,
-        "slots": [
-          {
-            "slotSize": 5,
-            "columnOrder": 1,
-            "fieldID": "title"
-          }
-        ]
-      },
-      {
-        "rowOrder": 4,
-        "slots": [
-          {
-            "slotSize": 3,
-            "columnOrder": 1,
-            "fieldID": "title"
-          }
-        ]
-      },
-      {
-        "rowOrder": 5,
-        "slots": [
-          {
-            "slotSize": 0,
-            "columnOrder": 1,
-            "fieldID": "title"
-          }
-        ]
-      }
-    ]
-  }
+  "fieldTypes": [
+    {
+      "id": "1",
+      "name": "summary",
+      "isCustom": false,
+      "availableSizes": [
+        12
+      ]
+    }
+  ]
 }

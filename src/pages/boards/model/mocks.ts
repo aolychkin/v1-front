@@ -1,11 +1,14 @@
 import axios from 'axios';
-import { TBoard, TCard, TCardCustomField, TCardFields, TCardMeta, TCardVisualConfig } from "./types";
+import { TBoard, TCard, TCardField, TCardFieldConfig, TCardFieldType, TCardFieldVisual, TCardFieldVisualInModal, TCardFieldVisualOnBoard, TCardMeta } from "./types";
 import data from './Board.json'
 
-export const mockCardForConstruction: TCard = {
+export const mockCard: TCard = {
   id: "0",
-  title: "Заголовок активности",
   meta: <TCardMeta>{
+    type: "Задача",
+    project: "Проект 1",
+    board: "Проект: БИОС",
+    sprint: "спринт 1: 2025.04.01-2025.04.15",
     columnID: "В работе",
     order: 1,
     creator: "Алексей Лычкин",
@@ -13,22 +16,108 @@ export const mockCardForConstruction: TCard = {
     updatedAt: "2025-03-03",
     updatedItem: "Описание",
   },
-  fields: <TCardFields>{
-    project: "Создание БИОС",
-    type: "Задача",
-    board: "Проект: БИОС",
-    sprint: "спринт 1: 2025.04.01-2025.04.15",
-    assignee: "Яна Саломатина",
-    customFields: <TCardCustomField[]>[
-      {
-        name: "Кастомное поле",
-        type: "Список",
-        valueSource: "ручной ввод",
-        availableValues: ["1", "2", "3"]
-      }
-    ]
-  }
+  fields: <TCardField[]>[
+    {
+      id: "1",
+      configID: "1",
+      value: ["Коротко суть: что требуется от исполнителя"],
+    },
+    {
+      id: "2",
+      configID: "2",
+      value: ["Подробное описание задачи, которое точно дает понять, что происходит и что нужно сделать"]
+    }
+  ]
 }
+export const mockCardFieldConfig: TCardFieldConfig[] =
+  [
+    {
+      id: "1",
+      name: "summary",
+      alias: "Заголовок активности",
+      valueTypeID: "summary",
+      defaultValue: "Без названия",
+      valueSource: "manual",
+      availableValues: {
+        color: "red",
+        value: "all",
+      },
+      visual: <TCardFieldVisual>{
+        board: <TCardFieldVisualOnBoard>{
+          rowOrder: 1,
+          columnOrder: 1,
+          size: 12,
+        },
+        modal: <TCardFieldVisualInModal>{
+          category: "description",
+          order: 0,
+        },
+      }
+    },
+    {
+      id: "1",
+      name: "description",
+      alias: "Описание задачи",
+      valueTypeID: "2",
+      defaultValue: "",
+      valueSource: "manual",
+      availableValues: {
+        color: "red",
+        value: "all",
+      },
+      visual: <TCardFieldVisual>{
+        board: <TCardFieldVisualOnBoard>{
+          rowOrder: 2,
+          columnOrder: 1,
+          size: 12,
+        },
+        modal: <TCardFieldVisualInModal>{
+          category: "description",
+          order: 0,
+        },
+      }
+    }
+  ]
+
+
+export const mockCardFieldType: TCardFieldType[] = [
+  {
+    id: "1",
+    name: "summary",
+    isCustom: false,
+    availableSizes: [12]
+  },
+  {
+    id: "2",
+    name: "description",
+    isCustom: false,
+    availableSizes: [12]
+  }
+
+]
+
+// {
+//   id: "2",
+//   name: "assignee",
+//   alias: "Исполнитель",
+//   type: {
+//     defaultValue: "Исполнитель DV",
+//     content: "Яна Саломатина"
+//   },
+//   isCustom: false
+// },
+// {
+//   id: "3",
+//   name: "custom",
+//   alias: "Кастомное поле",
+//   type: {
+//     color: "red",
+//     defaultValue: "1",
+//     valueSource: "ручной ввод",
+//     availableValues: ["1", "2", "3"]
+//   },
+//   isCustom: true
+// },
 
 // export const mockCardVisualConfig: TCardVisualConfig = {
 //   parentID: '',
@@ -68,7 +157,8 @@ export const getMockData = (): TBoard => {
   const board: TBoard = {
     columns: data.columns,
     cards: data.cards,
-    cardVisual: data.cardVisual
+    fieldConfigs: data.fieldConfigs,
+    fieldTypes: data.fieldTypes,
   }
   return board
 }

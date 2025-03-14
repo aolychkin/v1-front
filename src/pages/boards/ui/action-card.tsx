@@ -51,7 +51,7 @@ const Display = (
             opacity: 0.3
           })
         }}>
-        <ActionCardContent card={card} isConstruct={false} isDebug />
+        <ActionCardContent fields={card.fields} isConstruct={false} isDebug meta={card.meta} />
       </Card>
       {
         state.type === 'is-over' && state.closestEdge === 'bottom' ? (

@@ -1,17 +1,17 @@
-import { Stack, IconButton, Typography, Tabs, TabList, Tab, ListItemDecorator, TabPanel, Sheet, Card, AccordionGroup, Accordion, AccordionSummary, AccordionDetails, CardContent, Avatar } from "@mui/joy"
-import { Settings, SquareKanban, Columns3, RectangleHorizontal, List, Text } from "lucide-react"
+import { Stack, IconButton, Typography, Tabs, TabList, Tab, ListItemDecorator, TabPanel, Sheet, Card, AccordionGroup, Accordion, AccordionSummary, AccordionDetails, CardContent, Avatar, ListItemContent, accordionSummaryClasses, accordionDetailsClasses } from "@mui/joy"
+import { Settings, SquareKanban, Columns3, RectangleHorizontal, List, Text, Save } from "lucide-react"
 import { UIBorderRadius } from "shared/ui/styles"
-import { mockCardForConstruction } from "../model/mocks"
 import { ActionCardContent } from "./action-card-content"
-import { TCardVisualConfig } from "../model/types"
+import { TCard, TCardFieldConfig, TCardFieldType } from "../model/types"
+import { useState } from "react"
+import { mockCard, mockCardFieldConfig, mockCardFieldType } from "../model/mocks"
 
-export const BoardSetting = (
-  {
-    visualConfig
-  }: {
-    visualConfig: TCardVisualConfig
-  }
-) => {
+export const BoardSetting = () => {
+  const card: TCard = mockCard
+  const fieldConfigs: TCardFieldConfig[] = mockCardFieldConfig
+  const fieldTypes: TCardFieldType[] = mockCardFieldType
+  const [data, setData] = useState(card);
+
   return (
     <Stack direction='column' spacing={2}>
       <Stack direction='row' spacing={2}>
@@ -55,8 +55,8 @@ export const BoardSetting = (
           <TabPanel value={2}>
             <Stack direction='row' spacing={2}>
               <Sheet variant='plain'>
-                <Card sx={{ margin: '8px', width: '314px' }}>
-                  <ActionCardContent card={mockCardForConstruction} isConstruct config={visualConfig} />
+                <Card sx={{ margin: '8px', width: '314px' }} size="md">
+                  <ActionCardContent isConstruct fields={data.fields} />
                 </Card>
               </Sheet>
               {/* TODO: где-то должно и глобально управляться, отображаться все доступные шаблоны */}
@@ -104,30 +104,48 @@ export const BoardSetting = (
                       <Typography level="body-sm">Системные поля</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <Stack spacing={1}>
-                        <Card size="sm">
-                          <CardContent orientation='horizontal'>
+                      <AccordionGroup
+                        variant='plain'
+                        transition="0.2s"
+                        sx={{
+                          maxWidth: 400,
+                          borderRadius: 'md',
+                          [`& .${accordionDetailsClasses.content}.${accordionDetailsClasses.expanded}`]:
+                          {
+                            paddingBlock: '8px',
+                          },
+                          [`& .${accordionSummaryClasses.button}`]: {
+                            paddingBlock: '8px',
+                          },
+                        }}
+                      >
+                        <Accordion>
+                          <AccordionSummary>
                             <Avatar color="success">
                               <Text />
                             </Avatar>
-                            <Stack direction='column'>
+                            <ListItemContent>
                               <Typography level="title-sm">Название задачи</Typography>
                               <Typography level="body-xs">Текст: "любой"</Typography>
-                            </Stack>
-                          </CardContent>
-                        </Card>
-                        <Card size="sm">
-                          <CardContent orientation='horizontal'>
+                            </ListItemContent>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                          </AccordionDetails>
+                        </Accordion>
+                        <Accordion>
+                          <AccordionSummary>
                             <Avatar color="success">
                               <List />
                             </Avatar>
-                            <Stack direction='column'>
+                            <ListItemContent>
                               <Typography level="title-sm">Notifications</Typography>
                               <Typography level="body-xs">Enable or disable your notifications</Typography>
-                            </Stack>
-                          </CardContent>
-                        </Card>
-                      </Stack>
+                            </ListItemContent>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                          </AccordionDetails>
+                        </Accordion>
+                      </AccordionGroup>
                     </AccordionDetails>
                   </Accordion>
                   <Accordion defaultExpanded>
@@ -148,3 +166,30 @@ export const BoardSetting = (
     </Stack>
   )
 }
+
+
+{/* <Stack spacing={1}>
+
+<Card size="sm">
+  <CardContent orientation='horizontal'>
+    <Avatar color="success">
+      <Text />
+    </Avatar>
+    <Stack direction='column'>
+      <Typography level="title-sm">Название задачи</Typography>
+      <Typography level="body-xs">Текст: "любой"</Typography>
+    </Stack>
+  </CardContent>
+</Card>
+<Card size="sm">
+  <CardContent orientation='horizontal'>
+    <Avatar color="success">
+      <List />
+    </Avatar>
+    <Stack direction='column'>
+      <Typography level="title-sm">Notifications</Typography>
+      <Typography level="body-xs">Enable or disable your notifications</Typography>
+    </Stack>
+  </CardContent>
+</Card>
+</Stack> */}

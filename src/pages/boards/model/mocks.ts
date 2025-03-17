@@ -35,12 +35,12 @@ export const mockCardFieldConfig: TCardFieldConfig[] =
       id: "1",
       name: "summary",
       alias: "Заголовок активности",
-      valueTypeID: "summary",
+      valueTypeID: "1",
       defaultValue: "Без названия",
       valueSource: "manual",
       availableValues: {
-        color: "red",
-        value: "all",
+        color: "",
+        value: "text",
       },
       visual: <TCardFieldVisual>{
         board: <TCardFieldVisualOnBoard>{
@@ -55,15 +55,15 @@ export const mockCardFieldConfig: TCardFieldConfig[] =
       }
     },
     {
-      id: "1",
+      id: "2",
       name: "description",
-      alias: "Описание задачи",
+      alias: "Описание активности",
       valueTypeID: "2",
       defaultValue: "",
       valueSource: "manual",
       availableValues: {
-        color: "red",
-        value: "all",
+        color: "",
+        value: "text",
       },
       visual: <TCardFieldVisual>{
         board: <TCardFieldVisualOnBoard>{
@@ -83,13 +83,15 @@ export const mockCardFieldConfig: TCardFieldConfig[] =
 export const mockCardFieldType: TCardFieldType[] = [
   {
     id: "1",
-    name: "summary",
+    name: "text-inline",
+    alias: "Строка",
     isCustom: false,
     availableSizes: [12]
   },
   {
     id: "2",
-    name: "description",
+    name: "text-multiline",
+    alias: "Абзац",
     isCustom: false,
     availableSizes: [12]
   }

@@ -32,7 +32,7 @@ export type TCardField = {
 //Настраивает пользователь
 export type TCardFieldConfig = {
   id: string;
-  name: string;
+  name: string; //На системных полях запрещаем менять name
   alias: string;
   valueTypeID: string;
   defaultValue: string;
@@ -47,6 +47,7 @@ export type TCardFieldConfig = {
 export type TCardFieldType = {
   id: string;
   name: string;
+  alias: string;
   isCustom: boolean;
   availableSizes: number[];
 }
@@ -72,15 +73,6 @@ export type TCardFieldVisualInModal = {
 }
 
 export type TCardFieldKey = keyof TCardField
-
-// export type TCardFields = {
-//   project?: string;
-//   type?: string;
-//   board?: string;
-//   sprint?: string;
-//   assignee?: string;
-//   customFields: TCardCustomField[];
-// }
 
 export type TColumn = {
   id: string;

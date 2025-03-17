@@ -1,10 +1,10 @@
 import { Stack, IconButton, Typography, Tabs, TabList, Tab, ListItemDecorator, TabPanel, Sheet, Card, AccordionGroup, Accordion, AccordionSummary, AccordionDetails, CardContent, Avatar, ListItemContent, accordionSummaryClasses, accordionDetailsClasses } from "@mui/joy"
 import { Settings, SquareKanban, Columns3, RectangleHorizontal, List, Text, Save } from "lucide-react"
 import { UIBorderRadius } from "shared/ui/styles"
-import { ActionCardContent } from "./action-card-content"
 import { TCard, TCardFieldConfig, TCardFieldType } from "../model/types"
 import { useState } from "react"
 import { mockCard, mockCardFieldConfig, mockCardFieldType } from "../model/mocks"
+import { CardFieldConfig } from "./card-field-config"
 
 export const BoardSetting = () => {
   const card: TCard = mockCard
@@ -56,7 +56,7 @@ export const BoardSetting = () => {
             <Stack direction='row' spacing={2}>
               <Sheet variant='plain'>
                 <Card sx={{ margin: '8px', width: '314px' }} size="md">
-                  <ActionCardContent isConstruct fields={data.fields} />
+                  {/* <ActionCardContent isConstruct fields={data.fields} /> */}
                 </Card>
               </Sheet>
               {/* TODO: где-то должно и глобально управляться, отображаться все доступные шаблоны */}
@@ -119,32 +119,11 @@ export const BoardSetting = () => {
                           },
                         }}
                       >
-                        <Accordion>
-                          <AccordionSummary>
-                            <Avatar color="success">
-                              <Text />
-                            </Avatar>
-                            <ListItemContent>
-                              <Typography level="title-sm">Название задачи</Typography>
-                              <Typography level="body-xs">Текст: "любой"</Typography>
-                            </ListItemContent>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                          </AccordionDetails>
-                        </Accordion>
-                        <Accordion>
-                          <AccordionSummary>
-                            <Avatar color="success">
-                              <List />
-                            </Avatar>
-                            <ListItemContent>
-                              <Typography level="title-sm">Notifications</Typography>
-                              <Typography level="body-xs">Enable or disable your notifications</Typography>
-                            </ListItemContent>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                          </AccordionDetails>
-                        </Accordion>
+                        {
+                          fieldConfigs.map((config) => (
+                            <CardFieldConfig config={config} type={fieldTypes.find((type) => type.id === config.valueTypeID)} demoField={card.fields.find((field) => field.configID === config.id)} />
+                          ))
+                        }
                       </AccordionGroup>
                     </AccordionDetails>
                   </Accordion>

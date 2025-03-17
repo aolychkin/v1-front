@@ -59,7 +59,8 @@
   "fieldTypes": [
     {
       "id": "1",
-      "name": "summary",
+      "name": "text-inline",
+      "alias": "Строка",
       "isCustom": false,
       "availableSizes": [
         12

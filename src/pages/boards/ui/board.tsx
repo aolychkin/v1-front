@@ -9,7 +9,6 @@ import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/clo
 import IconButton from '@mui/joy/IconButton'
 import { Columns3, List, RectangleHorizontal, Save, Text, SaveOff, Settings, SquareKanban } from "lucide-react";
 import { UIBorderRadius } from "shared/ui/styles";
-import { ActionCardContent } from "./action-card-content";
 import { BoardSetting } from "./board-settings";
 
 //TODO: сделать настройку кастомную карточек и ее полей, настройку колонок + группировки

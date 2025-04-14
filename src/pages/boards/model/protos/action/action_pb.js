@@ -552,6 +552,7 @@ proto.action.DTOCard.toObject = function(includeInstance, msg) {
   var f, obj = {
 id: jspb.Message.getFieldWithDefault(msg, 1, ""),
 order: jspb.Message.getFieldWithDefault(msg, 2, 0),
+columnId: jspb.Message.getFieldWithDefault(msg, 3, ""),
 action: (f = msg.getAction()) && proto.action.DTOAction.toObject(includeInstance, f)
   };
 
@@ -596,6 +597,10 @@ proto.action.DTOCard.deserializeBinaryFromReader = function(msg, reader) {
     case 2:
       var value = /** @type {number} */ (reader.readUint32());
       msg.setOrder(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setColumnId(value);
       break;
     case 4:
       var value = new proto.action.DTOAction;
@@ -645,6 +650,13 @@ proto.action.DTOCard.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getColumnId();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
   f = message.getAction();
   if (f != null) {
     writer.writeMessage(
@@ -689,6 +701,24 @@ proto.action.DTOCard.prototype.getOrder = function() {
  */
 proto.action.DTOCard.prototype.setOrder = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional string column_id = 3;
+ * @return {string}
+ */
+proto.action.DTOCard.prototype.getColumnId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.action.DTOCard} returns this
+ */
+proto.action.DTOCard.prototype.setColumnId = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 

@@ -58,6 +58,9 @@ export class DTOCard extends jspb.Message {
   getOrder(): number;
   setOrder(value: number): void;
 
+  getColumnId(): string;
+  setColumnId(value: string): void;
+
   hasAction(): boolean;
   clearAction(): void;
   getAction(): DTOAction | undefined;
@@ -77,6 +80,7 @@ export namespace DTOCard {
   export type AsObject = {
     id: string,
     order: number,
+    columnId: string,
     action?: DTOAction.AsObject,
   }
 }

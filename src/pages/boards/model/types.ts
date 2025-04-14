@@ -1,4 +1,3 @@
-import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types";
 
 // // meta - служебные поля. Мб потом убрать из мета creator и createdAt (обновляются только 1 раз)
 // export type TCard = {
@@ -72,76 +71,6 @@ import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types"
 //   order: number;
 // }
 
-export type TCardConfig = {
-  id: string,
-  rowOrder: number,
-  columnOrder: number,
-  size: number,
-  fieldConfigId: string,
-}
-
-export type TFieldType = {
-  id: string,
-  name: string,
-  alias: string,
-  isCustom: boolean,
-  availableSizes: string[],
-}
-export type TFieldConfig = {
-  id: string,
-  name: string,
-  alias: string,
-  fieldType?: TFieldType,
-  defaultValue: string,
-  availableValues: string,
-}
-export type TSprint = {
-  id: string,
-  name: string,
-}
-
-export type TActionField = {
-  id: string,
-  value: string,
-  configId: string,
-}
-
-//TODO: Убрать логику на фронте. 
-//TODO: БЛЯЯЯТЬ. Добавить воркфлоу
-export type TCard = {
-  id: string,
-  order: number,
-  columnId: string, //TODO: лишнее поле
-  actionNum: number,
-  currentStepId: string,
-  sprintIds: string[],
-  fields: TActionField[],
-}
-
-export type TCurrentStep = {
-  id: string;
-  name: string;
-  workflowStatus: string;
-}
-
-//Карточка не должна внутри колонки сидеть.
-//Сопоставлять по куррент степу мб
-export type TColumn = {
-  id: string;
-  name: string;
-  steps: TCurrentStep[];
-  onBoardActions: TCard[];
-};
-
-export type TBoard = {
-  id: string;
-  key: string;
-  columns: TColumn[];
-  sprints: TSprint[];
-  fieldConfigs: TFieldConfig[];
-  cardConfigs: TCardConfig[];
-};
-
 // export type TBoard = {
 //   columns: TColumn[];
 //   cards: TCard[];
@@ -165,36 +94,3 @@ export type TBoard = {
 // };
 
 
-//TODO: а это используется?
-export type TCardFieldKey = keyof TActionField
-
-export type TCardState =
-  | {
-    type: 'idle';
-  }
-  | {
-    type: 'is-dragging';
-  }
-  | {
-    type: 'is-dragging-and-left-self';
-  }
-  | {
-    type: 'is-over';
-    // dragging: DOMRect; // TODO: получить высоту элемента. Этот параметр нужен только для этого.
-    closestEdge: Edge;
-  }
-  | {
-    type: 'preview';
-    container: HTMLElement;
-    // dragging: DOMRect;
-  };
-
-export type TColumnState =
-  | {
-    type: 'column-idle';
-  }
-  | {
-    type: 'is-card-over';
-    isOverChildCard: boolean;
-    // dragging: DOMRect; // TODO: получить высоту элемента. Этот параметр нужен только для этого.
-  };

@@ -1,15 +1,18 @@
+import { TBoard, TColumn, TCurrentStep, TCard, TActionField, TSprint, TFieldConfig, TFieldType, TCardConfig } from "pages/boards/model";
+import { DTOCard, DTOActionField, DTOFieldConfig, DTOFieldType, DTOAction } from "pages/boards/model/protos/action/action_pb";
+import { DTOBoard, DTOCardVisualConfig, DTOColumn, DTOCurrentStep, DTOSprint } from "pages/boards/model/protos/board/board_pb";
+import { TAction } from "pages/boards/model/types/action";
 
-import { TActionField, TBoard, TCard, TCardConfig, TColumn, TCurrentStep, TFieldConfig, TFieldType, TSprint } from "pages/boards/model";
-import { DTOCard, DTOActionField, DTOFieldConfig, DTOFieldType } from "pages/boards/model/protos/action/action_pb";
-import { DTOBoard, DTOColumn, DTOCurrentStep, DTOSprint } from "pages/boards/model/protos/board/board_pb";
 
+// _____________________________________________ //
+// _______________ GET BOARD () _______________ //
+// ___________________________________________ //
 export const mapTBoard = (dto: DTOBoard.AsObject): TBoard => ({
   id: dto.id,
   key: dto.key,
   columns: mapTColumn(dto.columnsList),
   sprints: mapTSprint(dto.sprintsList),
-  fieldConfigs: mapTFieldConfig(dto.fieldConfigsList),
-  cardConfigs: mapTCardConfig(dto.cardConfigsList),
+  cardVisualConfigs: mapTCardConfig(dto.cardConfigsList),
 });
 
 export const mapTColumn = (dto: Array<DTOColumn.AsObject>): TColumn[] => {
@@ -17,7 +20,6 @@ export const mapTColumn = (dto: Array<DTOColumn.AsObject>): TColumn[] => {
     id: item.id,
     name: item.name,
     steps: mapTCurrentStep(item.stepsList),
-    onBoardActions: mapTCard(item.onBoardActionList),
   }))
 };
 
@@ -29,18 +31,54 @@ export const mapTCurrentStep = (dto: Array<DTOCurrentStep.AsObject>): TCurrentSt
   }))
 };
 
+export const mapTSprint = (dto: Array<DTOSprint.AsObject>): TSprint[] => {
+  return dto.map((item: DTOSprint.AsObject) => (<TSprint>{
+    id: item.id,
+    name: item.name,
+  }))
+};
+
+export const mapTCardConfig = (dto: Array<DTOCardVisualConfig.AsObject>): TCardConfig[] => {
+  return dto.map((item: DTOCardVisualConfig.AsObject) => (<TCardConfig>{
+    id: item.id,
+    rowOrder: item.rowOrder,
+    columnOrder: item.columnOrder,
+    size: item.size,
+    fieldConfigId: item.fieldConfigId,
+  }))
+};
+
+// ______________________________________________ //
+// _______________ GET ACTION () _______________ //
+// ____________________________________________ //
 export const mapTCard = (dto: Array<DTOCard.AsObject>): TCard[] => {
   return dto.map((item: DTOCard.AsObject) => (<TCard>{
     id: item.id,
     order: item.order,
     columnId: item.columnId,
-    actionNum: item.actionNum,
-    currentStepId: item.currentStepId,
-    sprintIds: item.sprintIdsList,
-    fields: mapTActionField(item.fieldsList),
+    stepId: item.action?.stepId || "-1",
+    action: mapTAction(item.action),
   }))
 };
-
+export const mapTAction = (dto: DTOAction.AsObject | undefined): TAction => {
+  return dto
+    ? <TAction>{
+      id: dto.id,
+      key: dto.key,
+      actionNum: dto.actionNum,
+      stepId: dto.stepId,
+      sprintIds: dto.sprintIdsList,
+      fields: mapTActionField(dto.fieldsList),
+    }
+    : <TAction>{
+      id: "undefined",
+      key: "undefined",
+      actionNum: 0,
+      stepId: "undefined",
+      sprintIds: ["undefined"],
+      fields: {} as TActionField[],
+    }
+};
 export const mapTActionField = (dto: Array<DTOActionField.AsObject>): TActionField[] => {
   return dto.map((item: DTOActionField.AsObject) => (<TActionField>{
     id: item.id,
@@ -49,12 +87,6 @@ export const mapTActionField = (dto: Array<DTOActionField.AsObject>): TActionFie
   }))
 };
 
-export const mapTSprint = (dto: Array<DTOSprint.AsObject>): TSprint[] => {
-  return dto.map((item: DTOSprint.AsObject) => (<TSprint>{
-    id: item.id,
-    name: item.name,
-  }))
-};
 
 export const mapTFieldConfig = (dto: Array<DTOFieldConfig.AsObject>): TFieldConfig[] => {
   return dto.map((item: DTOFieldConfig.AsObject) => (<TFieldConfig>{
@@ -85,16 +117,6 @@ export const mapTFieldType = (dto: DTOFieldType.AsObject | undefined): TFieldTyp
       availableSizes: [],
     }
   )
-};
-
-export const mapTCardConfig = (dto: Array<DTOCardConfig.AsObject>): TCardConfig[] => {
-  return dto.map((item: DTOCardConfig.AsObject) => (<TCardConfig>{
-    id: item.id,
-    rowOrder: item.rowOrder,
-    columnOrder: item.columnOrder,
-    size: item.size,
-    fieldConfigId: item.fieldConfigId,
-  }))
 };
 
 

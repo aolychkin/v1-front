@@ -1,5 +1,94 @@
 import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types";
-import { TBoard, TCard, TColumn } from "../model/types";
+import { TBoard, TCard, TColumn } from "../model";
+
+//TODO: если reorder отличается от серверного, то перерисовать, если нет, то нет
+export const reorderCardsWithEdge = ({
+  cardsData,
+  currentCard,
+  targetCard,
+  edge
+}: {
+  cardsData?: TCard[],
+  currentCard: TCard;
+  targetCard: TCard;
+  edge: Edge | null
+}): TCard[] => {
+  console.time('reorderCardsWithEdge')
+  if (cardsData) {
+    return sortInt({ cardsData, currentCard, targetCard, edge });
+  } else {
+    return <TCard[]>{}
+  }
+}
+
+const reorderCurrentColumn = ({ cards }: { cards: TCard[] }) => {
+  cards.forEach((card) => card.order + 1)
+  return cards
+}
+
+// splice - функция, которая помогает отлично здесь
+const sortInt = ({
+  cardsData,
+  currentCard,
+  targetCard,
+  edge
+}: {
+  cardsData: TCard[],
+  currentCard: TCard;
+  targetCard: TCard;
+  edge: Edge | null
+}): TCard[] => {
+  if (edge === 'top' || edge === 'bottom') {
+    const currentCardIndex = cardsData.findIndex((card) => card.id === currentCard.id)
+    // const targetCardIndex = board.cards.findIndex((card) => card.id === targetCard.id)
+    if (edge === 'top') {
+      cardsData.filter((item: TCard) => (item.columnId === targetCard.columnId) && (item.order >= targetCard.order) ? edge === 'top' : (item.order > targetCard.order)).map((card): TCard => {
+        card.order += 1
+        return card
+      })
+      cardsData[currentCardIndex].order = targetCard.order
+    } else {
+      cardsData.filter((item: TCard) => (item.columnId === targetCard.columnId) && (item.order > targetCard.order)).map((card): TCard => {
+        card.order += 1
+        return card
+      })
+      cardsData[currentCardIndex].order = targetCard.order + 1
+    }
+    cardsData[currentCardIndex].columnId = targetCard.columnId
+
+    console.timeEnd('reorderCardsWithEdge')
+    return cardsData
+  } else {
+    console.timeEnd('reorderCardsWithEdge')
+    console.log("Unknown Edge in func: reorderCardsWithEdge())")
+    return cardsData
+  }
+}
+
+export const addCardInColumnBottom = ({
+  cardsData,
+  currentCard,
+  targetColumn
+}: {
+  cardsData?: TCard[],
+  currentCard: TCard;
+  targetColumn: TColumn
+}): TCard[] => {
+  if (cardsData) {
+    console.time('addCardInColumnBottom')
+    const currentCardIndex = cardsData.findIndex((card) => card.id === currentCard.id)
+    const maxOrder = Math.max(...cardsData.filter((item: TCard) => ((item.columnId === targetColumn.id) && (item.id != currentCard.id))).map(o => o.order))
+    cardsData[currentCardIndex].columnId = targetColumn.id
+    cardsData[currentCardIndex].order = maxOrder >= 1 ? maxOrder + 1 : 1
+    console.timeEnd('addCardInColumnBottom')
+    return cardsData
+  } else {
+    return <TCard[]>{}
+  }
+
+}
+
+
 
 // export const reorderCardsWithEdge = ({
 //   board,
@@ -17,7 +106,7 @@ import { TBoard, TCard, TColumn } from "../model/types";
 // }
 
 // const reorderCurrentColumn = ({ cards }: { cards: TCard[] }) => {
-//   cards.forEach((card) => card.meta.order + 1)
+//   cards.forEach((card) => card.order + 1)
 //   return cards
 // }
 
@@ -37,19 +126,19 @@ import { TBoard, TCard, TColumn } from "../model/types";
 //     const currentCardIndex = board.cards.findIndex((card) => card.id === currentCard.id)
 //     // const targetCardIndex = board.cards.findIndex((card) => card.id === targetCard.id)
 //     if (edge === 'top') {
-//       board.cards.filter((item: TCard) => (item.meta.columnID === targetCard.meta.columnID) && (item.meta.order >= targetCard.meta.order) ? edge === 'top' : (item.meta.order > targetCard.meta.order)).map((card): TCard => {
-//         card.meta.order += 1
+//       board.cards.filter((item: TCard) => (item.columnId === targetCard.columnId) && (item.order >= targetCard.order) ? edge === 'top' : (item.order > targetCard.order)).map((card): TCard => {
+//         card.order += 1
 //         return card
 //       })
-//       board.cards[currentCardIndex].meta.order = targetCard.meta.order
+//       board.cards[currentCardIndex].order = targetCard.order
 //     } else {
-//       board.cards.filter((item: TCard) => (item.meta.columnID === targetCard.meta.columnID) && (item.meta.order > targetCard.meta.order)).map((card): TCard => {
-//         card.meta.order += 1
+//       board.cards.filter((item: TCard) => (item.columnId === targetCard.columnId) && (item.order > targetCard.order)).map((card): TCard => {
+//         card.order += 1
 //         return card
 //       })
-//       board.cards[currentCardIndex].meta.order = targetCard.meta.order + 1
+//       board.cards[currentCardIndex].order = targetCard.order + 1
 //     }
-//     board.cards[currentCardIndex].meta.columnID = targetCard.meta.columnID
+//     board.cards[currentCardIndex].columnId = targetCard.columnId
 
 //     console.timeEnd('reorderCardsWithEdge')
 //     return board.cards
@@ -71,88 +160,9 @@ import { TBoard, TCard, TColumn } from "../model/types";
 // }): TCard[] => {
 //   console.time('addCardInColumnBottom')
 //   const currentCardIndex = board.cards.findIndex((card) => card.id === currentCard.id)
-//   const maxOrder = Math.max(...board.cards.filter((item: TCard) => ((item.meta.columnID === targetColumn.id) && (item.id != currentCard.id))).map(o => o.meta.order))
-//   board.cards[currentCardIndex].meta.columnID = targetColumn.id
-//   board.cards[currentCardIndex].meta.order = maxOrder >= 1 ? maxOrder + 1 : 1
-//   console.timeEnd('addCardInColumnBottom')
-//   return board.cards
-// }
-
-
-
-// export const reorderCardsWithEdge = ({
-//   board,
-//   currentCard,
-//   targetCard,
-//   edge
-// }: {
-//   board: TBoard,
-//   currentCard: TCard;
-//   targetCard: TCard;
-//   edge: Edge | null
-// }): TCard[] => {
-//   console.time('reorderCardsWithEdge')
-//   return sortInt({ board, currentCard, targetCard, edge })
-// }
-
-// const reorderCurrentColumn = ({ cards }: { cards: TCard[] }) => {
-//   cards.forEach((card) => card.meta.order + 1)
-//   return cards
-// }
-
-// // splice - функция, которая помогает отлично здесь
-// const sortInt = ({
-//   board,
-//   currentCard,
-//   targetCard,
-//   edge
-// }: {
-//   board: TBoard,
-//   currentCard: TCard;
-//   targetCard: TCard;
-//   edge: Edge | null
-// }): TCard[] => {
-//   if (edge === 'top' || edge === 'bottom') {
-//     const currentCardIndex = board.cards.findIndex((card) => card.id === currentCard.id)
-//     // const targetCardIndex = board.cards.findIndex((card) => card.id === targetCard.id)
-//     if (edge === 'top') {
-//       board.cards.filter((item: TCard) => (item.meta.columnID === targetCard.meta.columnID) && (item.meta.order >= targetCard.meta.order) ? edge === 'top' : (item.meta.order > targetCard.meta.order)).map((card): TCard => {
-//         card.meta.order += 1
-//         return card
-//       })
-//       board.cards[currentCardIndex].meta.order = targetCard.meta.order
-//     } else {
-//       board.cards.filter((item: TCard) => (item.meta.columnID === targetCard.meta.columnID) && (item.meta.order > targetCard.meta.order)).map((card): TCard => {
-//         card.meta.order += 1
-//         return card
-//       })
-//       board.cards[currentCardIndex].meta.order = targetCard.meta.order + 1
-//     }
-//     board.cards[currentCardIndex].meta.columnID = targetCard.meta.columnID
-
-//     console.timeEnd('reorderCardsWithEdge')
-//     return board.cards
-//   } else {
-//     console.timeEnd('reorderCardsWithEdge')
-//     console.log("Unknown Edge in func: reorderCardsWithEdge())")
-//     return board.cards
-//   }
-// }
-
-// export const addCardInColumnBottom = ({
-//   board,
-//   currentCard,
-//   targetColumn
-// }: {
-//   board: TBoard,
-//   currentCard: TCard;
-//   targetColumn: TColumn
-// }): TCard[] => {
-//   console.time('addCardInColumnBottom')
-//   const currentCardIndex = board.cards.findIndex((card) => card.id === currentCard.id)
-//   const maxOrder = Math.max(...board.cards.filter((item: TCard) => ((item.meta.columnID === targetColumn.id) && (item.id != currentCard.id))).map(o => o.meta.order))
-//   board.cards[currentCardIndex].meta.columnID = targetColumn.id
-//   board.cards[currentCardIndex].meta.order = maxOrder >= 1 ? maxOrder + 1 : 1
+//   const maxOrder = Math.max(...board.cards.filter((item: TCard) => ((item.columnId === targetColumn.id) && (item.id != currentCard.id))).map(o => o.order))
+//   board.cards[currentCardIndex].columnId = targetColumn.id
+//   board.cards[currentCardIndex].order = maxOrder >= 1 ? maxOrder + 1 : 1
 //   console.timeEnd('addCardInColumnBottom')
 //   return board.cards
 // }

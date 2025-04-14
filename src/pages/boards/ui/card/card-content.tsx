@@ -77,7 +77,7 @@ export const ActionCardContent = (
         <ActionCardRow slots={row.slots} card={card} />
       ))
       }*/}
-      <Typography level='title-md'>{card.actionNum}, column:{card.columnId}, order {card.order}</Typography>
+      <Typography level='title-md'>{card.id}, column:{card.action.stepId}, order {card.order}</Typography>
     </CardContent>
   )
 }

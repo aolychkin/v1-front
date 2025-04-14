@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { TCard, TColumn, TColumnState } from "../../model/types"
 import { ActionCard } from "../card/card"
 import { Divider, Stack, Typography } from "@mui/joy"
 
@@ -15,12 +14,13 @@ import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { useState, RefObject } from "react";
 import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import invariant from "tiny-invariant";
-import { TCardState } from "../../model/types";
 import { createPortal } from "react-dom";
 import { CardShadow } from "../card/card-shadow";
 import { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import { UIBorderRadius, UIColor } from "shared/ui/styles";
 import { objToTCard } from "pages/boards/lib";
+import { TColumn, TCard } from "pages/boards/model";
+import { TColumnState } from "pages/boards/model/types/action";
 
 const idle: TColumnState = { type: 'column-idle' }
 
@@ -29,8 +29,10 @@ const idle: TColumnState = { type: 'column-idle' }
 export const ActionColumn = (
   {
     column,
+    cards,
   }: {
     column: TColumn;
+    cards: TCard[];
   }
 ) => {
   const [state, setState] = useState<TColumnState>(idle);
@@ -112,7 +114,7 @@ export const ActionColumn = (
         }}
       >
         {
-          column.onBoardActions.map((card) => (
+          cards.map((card: TCard) => (
             <ActionCard key={card.id} card={card} />
           ))
         }

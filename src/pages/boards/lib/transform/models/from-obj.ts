@@ -1,4 +1,4 @@
-import { TActionField, TCard, TColumn } from "pages/boards/model"
+import { TAction, TActionField, TCard, TColumn } from "pages/boards/model"
 
 export const objToTCard = (item: any) => {
   try {
@@ -7,10 +7,15 @@ export const objToTCard = (item: any) => {
       id: item.id,
       order: item.order,
       columnId: item.columnId,
-      actionNum: item.actionNum,
-      currentStepId: item.currentStepId,
-      sprintIds: item.sprintIdsList,
-      fields: objToTActionField(item.fieldsList),
+      stepId: item.action.stepId,
+      action: <TAction>{
+        id: item.action.id,
+        key: item.action.key,
+        actionNum: item.action.actionNum,
+        stepId: item.action.stepId,
+        sprintIds: item.action.sprintIds,
+        fields: objToTActionField(item.action.fields),
+      }
     }
   } catch (e) {
     console.log("[ERROR] func objToTCard())", e, item)

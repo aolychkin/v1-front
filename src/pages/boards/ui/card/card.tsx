@@ -12,11 +12,12 @@ import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { useEffect, useRef, useState, RefObject } from "react";
 import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import invariant from "tiny-invariant";
-import { TCard, TCardState } from "../../model/types";
 import { createPortal } from "react-dom";
 import { CardShadow } from "./card-shadow";
 import { ActionCardContent } from "./card-content";
 import { objToTCard } from "pages/boards/lib";
+import { TCard } from "pages/boards/model";
+import { TCardState } from "pages/boards/model/types/action";
 
 const idle: TCardState = { type: "idle" }
 

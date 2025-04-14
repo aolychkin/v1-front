@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { TCard, TColumn, TColumnState } from "../model/types"
-import { ActionCard } from "./action-card"
+import { TCard, TColumn, TColumnState } from "../../model/types"
+import { ActionCard } from "../card/card"
 import { Divider, Stack, Typography } from "@mui/joy"
 
 import {
@@ -15,11 +15,12 @@ import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { useState, RefObject } from "react";
 import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import invariant from "tiny-invariant";
-import { TCardState, objToTCard } from "../model/types";
+import { TCardState } from "../../model/types";
 import { createPortal } from "react-dom";
-import { CardShadow } from "./card-shadow";
+import { CardShadow } from "../card/card-shadow";
 import { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import { UIBorderRadius, UIColor } from "shared/ui/styles";
+import { objToTCard } from "pages/boards/lib";
 
 const idle: TColumnState = { type: 'column-idle' }
 
@@ -28,10 +29,8 @@ const idle: TColumnState = { type: 'column-idle' }
 export const ActionColumn = (
   {
     column,
-    cards
   }: {
     column: TColumn;
-    cards: TCard[]
   }
 ) => {
   const [state, setState] = useState<TColumnState>(idle);
@@ -98,7 +97,7 @@ export const ActionColumn = (
         borderRadius: UIBorderRadius["primary"]
       }}
     >
-      <Typography>{column.title}</Typography>
+      <Typography>{column.name}</Typography>
       <Divider orientation='horizontal' />
       <Stack
         ref={columnUseRef}
@@ -113,7 +112,7 @@ export const ActionColumn = (
         }}
       >
         {
-          cards.map((card) => (
+          column.onBoardActions.map((card) => (
             <ActionCard key={card.id} card={card} />
           ))
         }

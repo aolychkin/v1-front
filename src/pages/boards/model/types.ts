@@ -1,89 +1,145 @@
 import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types";
 
-// meta - служебные поля. Мб потом убрать из мета creator и createdAt (обновляются только 1 раз)
-export type TCard = {
-  id: string;
-  meta: TCardMeta;
-  fields: TCardField[];
-  // activity?: string[];
-};
-export type TCardMeta = {
-  type: string;
-  project: string;
-  board: string;
-  columnID: string;
-  order: number;
-  sprint?: string;
-  createdBy?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  updatedBy?: string;
-  // updatedItem?: string;
+// // meta - служебные поля. Мб потом убрать из мета creator и createdAt (обновляются только 1 раз)
+// export type TCard = {
+//   id: string;
+//   meta: TCardMeta;
+//   fields: TCardField[];
+//   // activity?: string[];
+// };
+// export type TCardMeta = {
+//   type: string;
+//   project: string;
+//   board: string;
+//   columnID: string;
+//   order: number;
+//   sprint?: string;
+//   createdBy?: string;
+//   createdAt?: string;
+//   updatedAt?: string;
+//   updatedBy?: string;
+//   // updatedItem?: string;
+// }
+
+// //TODO: !!! Хранить только field Id, value и visual
+// // Три сущности: тип, настройка типа, значение типа на карточке + его используемость
+// // Принадлежит карточке
+// export type TCardField = {
+//   id: string;
+//   configID: string;
+//   value?: string[];
+// }
+// //Настраивает пользователь
+// export type TCardFieldConfig = {
+//   id: string;
+//   name: string; //На системных полях запрещаем менять name
+//   alias: string;
+//   valueTypeID: string;
+//   defaultValue: string;
+//   valueSource: string; //Если источник данных подтягивается из другого поля. МБ это availableValues
+//   availableValues?: { //[]
+//     color: string;
+//     value: string;
+//   }; // если ручной ввод, то здесь все введенные когда-либо значения в это поле (и существующие у задач сейчас). МБ маску сюда же вставлять
+//   visual: TCardFieldVisual;
+// }
+// //Настраиваю я в системе
+// export type TCardFieldType = {
+//   id: string;
+//   name: string;
+//   alias: string;
+//   isCustom: boolean;
+//   availableSizes: number[];
+// }
+
+// //Generic type
+// export type TCardFieldGroupedByRow = {
+//   [key: string]: TCardField[]
+// }
+
+// export type TCardFieldVisual = {
+//   board: TCardFieldVisualOnBoard;
+//   modal: TCardFieldVisualInModal;
+// }
+// //Когда добавляю ROW в конструкторе, то добавляю его локальное. Нет привязанного поля - ничего не сохраняется. Есть - обновляется visual у поля
+// export type TCardFieldVisualOnBoard = {
+//   rowOrder: number;
+//   columnOrder: number;
+//   size: number; //12:"max" | 6: "half" |3: "medium" |1: "min"
+// }
+// export type TCardFieldVisualInModal = {
+//   category: string; //Поля с описанием / Контекстные поля / Скрытые поля
+//   order: number;
+// }
+
+export type TCardConfig = {
+  id: string,
+  rowOrder: number,
+  columnOrder: number,
+  size: number,
+  fieldConfigId: string,
 }
 
-//TODO: !!! Хранить только field Id, value и visual
-// Три сущности: тип, настройка типа, значение типа на карточке + его используемость
-// Принадлежит карточке
-export type TCardField = {
-  id: string;
-  configID: string;
-  value?: string[];
+export type TFieldType = {
+  id: string,
+  name: string,
+  alias: string,
+  isCustom: boolean,
+  availableSizes: string[],
 }
-//Настраивает пользователь
-export type TCardFieldConfig = {
-  id: string;
-  name: string; //На системных полях запрещаем менять name
-  alias: string;
-  valueTypeID: string;
-  defaultValue: string;
-  valueSource: string; //Если источник данных подтягивается из другого поля. МБ это availableValues
-  availableValues?: { //[]
-    color: string;
-    value: string;
-  }; // если ручной ввод, то здесь все введенные когда-либо значения в это поле (и существующие у задач сейчас). МБ маску сюда же вставлять
-  visual: TCardFieldVisual;
+export type TFieldConfig = {
+  id: string,
+  name: string,
+  alias: string,
+  fieldType?: TFieldType,
+  defaultValue: string,
+  availableValues: string,
 }
-//Настраиваю я в системе
-export type TCardFieldType = {
+export type TSprint = {
+  id: string,
+  name: string,
+}
+
+export type TActionField = {
+  id: string,
+  value: string,
+  configId: string,
+}
+
+//TODO: Убрать логику на фронте. 
+//TODO: БЛЯЯЯТЬ. Добавить воркфлоу
+export type TCard = {
+  id: string,
+  order: number,
+  columnId: string, //TODO: лишнее поле
+  actionNum: number,
+  currentStepId: string,
+  sprintIds: string[],
+  fields: TActionField[],
+}
+
+export type TCurrentStep = {
   id: string;
   name: string;
-  alias: string;
-  isCustom: boolean;
-  availableSizes: number[];
+  workflowStatus: string;
 }
 
-//Generic type
-export type TCardFieldGroupedByRow = {
-  [key: string]: TCardField[]
-}
-
-export type TCardFieldVisual = {
-  board: TCardFieldVisualOnBoard;
-  modal: TCardFieldVisualInModal;
-}
-//Когда добавляю ROW в конструкторе, то добавляю его локальное. Нет привязанного поля - ничего не сохраняется. Есть - обновляется visual у поля
-export type TCardFieldVisualOnBoard = {
-  rowOrder: number;
-  columnOrder: number;
-  size: number; //12:"max" | 6: "half" |3: "medium" |1: "min"
-}
-export type TCardFieldVisualInModal = {
-  category: string; //Поля с описанием / Контекстные поля / Скрытые поля
-  order: number;
-}
-
-export type TCardFieldKey = keyof TCardField
-
+//Карточка не должна внутри колонки сидеть.
+//Сопоставлять по куррент степу мб
 export type TColumn = {
   id: string;
-  title: string;
+  name: string;
+  steps: TCurrentStep[];
+  onBoardActions: TCard[];
 };
 
 export type TBoard = {
+  id: string;
+  key: string;
   columns: TColumn[];
-  cards: TCard[];
-  fieldConfigs: TCardFieldConfig[];
-  fieldTypes: TCardFieldType[]
+  sprints: TSprint[];
+  fieldConfigs: TFieldConfig[];
+  cardConfigs: TCardConfig[];
 };
 
 // export type TBoard = {
@@ -108,40 +164,9 @@ export type TBoard = {
 //   fieldID?: string //TCardField
 // };
 
-export const objToTCard = (obj: any) => {
-  try {
-    // console.log(obj)
-    return <TCard>{
-      id: obj.id,
-      meta: <TCardMeta>{
-        columnID: obj.meta.columnID,
-        order: obj.meta.order,
-      },
-      fields: <TCardField[]>[
-        {
-          id: "1",
-          configID: "1",
-          value: [obj.title],
-        }
-      ]
-    }
-  } catch (e) {
-    console.log("Can't func objToTCard())", e, obj)
-    return <TCard>{}
-  }
-}
 
-export const objToTColumn = (obj: any) => {
-  try {
-    return <TColumn>{
-      id: obj.id,
-      title: obj.title,
-    }
-  } catch {
-    console.log("Can't func (objToTColumn)")
-    return <TColumn>{}
-  }
-}
+//TODO: а это используется?
+export type TCardFieldKey = keyof TActionField
 
 export type TCardState =
   | {

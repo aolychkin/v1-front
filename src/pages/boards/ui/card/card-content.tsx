@@ -1,7 +1,6 @@
 import { Card, CardContent, Sheet, Stack, Typography } from "@mui/joy"
-import { TCard, TCardField, TCardFieldGroupedByRow, TCardMeta } from "../model/types"
-import { CardSlotInlineText, CardSlotMultilineText } from "./card-field-types"
 import { UIColor } from "shared/ui/styles"
+import { TCard } from "pages/boards/model"
 
 // const ActionCardSlot = () => { }
 
@@ -64,64 +63,82 @@ const renderSlotSwitch = ({ param }: { param: string }) => {
 // }
 
 //TODO: как перерисовывать только доску при перетаскивании карточек на доске?
+
 export const ActionCardContent = (
   {
-    fields,
-    isConstruct,
-    isDebug,
-    meta,
+    card
   }: {
-    fields: TCardField[];
-    isConstruct: boolean;
-    isDebug?: boolean
-    meta?: TCardMeta
+    card: TCard
   }
 ) => {
-  // if (isConstruct) {
-  //   var rows: TCardFieldGroupedByRow = {}
-  //   const rowsArray = fields.map((field) => {
-  //     try {
-  //       rows[field.visual.board.rowOrder].push(field)
-  //     } catch {
-  //       rows[field.visual.board.rowOrder] = [field]
-  //       console.log("Push")
-  //     }
-  //   })
-
-
-  //   console.log(rows, Object.keys(rows).length)
-  //   return (
-  //     <CardContent>
-  //       {
-  //         Object.keys(rows).map((item) => (
-  //           <ActionCardRow fields={rows[item]} />
-  //         ))
-  //       }
-
-  //     </CardContent>
-  //   )
-  // }
-
-
-  // const rowsArray = ({ fields }: { fields: TCardField[] }) => fields.reduce((acc, { id, ...rest }) => {
-  //   acc[id] ??= [];
-  //   acc[id].push(rest);
-  //   return acc;
-  // }, {});
-  // const rowsArray = fields.map((field) => {
-  //   acc[id] ??= [];
-  //   acc[id].push(rest);
-  // })
-  // const rowedFields = 
   return (
     <CardContent>
       {/* {fields.map((field) => (
         <ActionCardRow slots={row.slots} card={card} />
       ))
       }*/}
-      {isDebug && meta &&
-        <Typography level='title-md'>{fields[0].value}, column:{meta.columnID}, order {meta.order}</Typography>
-      }
+      <Typography level='title-md'>{card.actionNum}, column:{card.columnId}, order {card.order}</Typography>
     </CardContent>
   )
 }
+// export const ActionCardContent = (
+//   {
+//     fields,
+//     isConstruct,
+//     isDebug,
+//     meta,
+//   }: {
+//     fields: TCardField[];
+//     isConstruct: boolean;
+//     isDebug?: boolean
+//     meta?: TCardMeta
+//   }
+// ) => {
+//   // if (isConstruct) {
+//   //   var rows: TCardFieldGroupedByRow = {}
+//   //   const rowsArray = fields.map((field) => {
+//   //     try {
+//   //       rows[field.visual.board.rowOrder].push(field)
+//   //     } catch {
+//   //       rows[field.visual.board.rowOrder] = [field]
+//   //       console.log("Push")
+//   //     }
+//   //   })
+
+
+//   //   console.log(rows, Object.keys(rows).length)
+//   //   return (
+//   //     <CardContent>
+//   //       {
+//   //         Object.keys(rows).map((item) => (
+//   //           <ActionCardRow fields={rows[item]} />
+//   //         ))
+//   //       }
+
+//   //     </CardContent>
+//   //   )
+//   // }
+
+
+//   // const rowsArray = ({ fields }: { fields: TCardField[] }) => fields.reduce((acc, { id, ...rest }) => {
+//   //   acc[id] ??= [];
+//   //   acc[id].push(rest);
+//   //   return acc;
+//   // }, {});
+//   // const rowsArray = fields.map((field) => {
+//   //   acc[id] ??= [];
+//   //   acc[id].push(rest);
+//   // })
+//   // const rowedFields = 
+//   return (
+//     <CardContent>
+//       {/* {fields.map((field) => (
+//         <ActionCardRow slots={row.slots} card={card} />
+//       ))
+//       }*/}
+//       {isDebug && meta &&
+//         <Typography level='title-md'>{fields[0].value}, column:{meta.columnID}, order {meta.order}</Typography>
+//       }
+//     </CardContent>
+//   )
+// }

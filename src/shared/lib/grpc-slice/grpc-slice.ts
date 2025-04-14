@@ -7,7 +7,7 @@ import {
 import { ROOT_HOST } from 'shared/config';
 import type { GrpcErrorResponse } from 'shared/lib';
 
-import { Tags } from './config';
+import { GrpcTags } from './config';
 import { type GrpcClientProps, grpcBaseQuery } from './grpc-client';
 import { grpc } from '@improbable-eng/grpc-web';
 
@@ -39,7 +39,7 @@ import { grpc } from '@improbable-eng/grpc-web';
 
 export const grpcSlice = createApi({
   reducerPath: 'api',
-  tagTypes: Object.keys(Tags),
+  tagTypes: Object.keys(GrpcTags),
   baseQuery: grpcBaseQuery({
     host: 'http://127.0.0.1:8080',
     metadata: new grpc.Metadata({ "X-Requested-With": "XMLHttpRequest" }),

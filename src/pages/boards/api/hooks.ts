@@ -1,5 +1,6 @@
-import { BoardRequest } from ".";
-import { GetBoardRequest } from "../model/board_pb";
+import { mapTBoard } from "../lib";
+import { TBoard } from "../model";
+import { GetBoardRequest } from "../model/protos/board/board_pb";
 import { useGetBoardQuery } from "./api";
 
 export const useBoardData = () => {
@@ -8,5 +9,7 @@ export const useBoardData = () => {
 
   const { data, isFetching, isError, error } = useGetBoardQuery(request);
 
-  return { data, isFetching, isError, error };
+  var board = data?.board ? mapTBoard(data?.board) : undefined
+
+  return { board, isFetching, isError, error };
 }

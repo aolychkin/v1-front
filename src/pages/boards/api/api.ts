@@ -6,9 +6,9 @@ import {
   type DictionaryResponse,
 } from 'shared/lib';
 
-import { GetBoardResponse, GetBoardRequest } from '../model/board_pb';
+import { GetBoardResponse, GetBoardRequest } from '../model/protos/board/board_pb';
 import { grpcSlice } from 'shared/lib/grpc-slice';
-import { BoardService } from '../model/board_pb_service';
+import { BoardService } from '../model/protos/board/board_pb_service';
 
 const boardSlice = grpcSlice.injectEndpoints({
   endpoints: (builder) => ({

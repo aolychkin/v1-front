@@ -1,4 +1,4 @@
-export const Tags = Object.freeze({
+export const ApiTags = Object.freeze({
   // BOARD: 'BoardTag',
   USER: 'UserTag',
   API_TOKEN: 'ApiToken',

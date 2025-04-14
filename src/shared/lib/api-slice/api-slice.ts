@@ -7,7 +7,7 @@ import {
 import { ROOT_HOST } from 'shared/config';
 import type { ApiErrorResponse } from 'shared/lib';
 
-import { Tags } from './config';
+import { ApiTags } from './config';
 import { httpClient, type BaseQueryParams } from './http-client';
 
 const injectEndpointOverridePreventer = <
@@ -38,7 +38,7 @@ const injectEndpointOverridePreventer = <
 
 export const apiSlice = createApi({
   reducerPath: 'api',
-  tagTypes: Object.keys(Tags),
+  tagTypes: Object.keys(ApiTags),
   baseQuery: httpClient({
     baseUrl: '/api',
     headers: {

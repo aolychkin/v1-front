@@ -1,2 +1,2 @@
 export { grpcSlice } from './grpc-slice';
-export { Tags } from './config';
+export { GrpcTags } from './config';

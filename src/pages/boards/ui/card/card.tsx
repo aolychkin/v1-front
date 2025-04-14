@@ -12,10 +12,11 @@ import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { useEffect, useRef, useState, RefObject } from "react";
 import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import invariant from "tiny-invariant";
-import { TCard, TCardState, objToTCard } from "../model/types";
+import { TCard, TCardState } from "../../model/types";
 import { createPortal } from "react-dom";
 import { CardShadow } from "./card-shadow";
-import { ActionCardContent } from "./action-card-content";
+import { ActionCardContent } from "./card-content";
+import { objToTCard } from "pages/boards/lib";
 
 const idle: TCardState = { type: "idle" }
 
@@ -51,7 +52,7 @@ const Display = (
             opacity: 0.3
           })
         }}>
-        <ActionCardContent fields={card.fields} isConstruct={false} isDebug meta={card.meta} />
+        <ActionCardContent card={card} />
       </Card>
       {
         state.type === 'is-over' && state.closestEdge === 'bottom' ? (

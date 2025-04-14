@@ -1,5 +1,5 @@
 export {
-  Tags,
+  ApiTags,
   apiSlice,
 } from './api-slice';
 
@@ -22,6 +22,11 @@ export {
   changeCase,
   getReplacer,
 } from './format';
+
+export {
+  GrpcTags,
+  grpcSlice,
+} from './grpc-slice';
 
 export {
   transformErrors,

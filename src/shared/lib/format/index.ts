@@ -1,0 +1,1 @@
+export { STRING_TYPES, changeCase, getReplacer } from './change-case';

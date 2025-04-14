@@ -8,7 +8,7 @@ export const Paths = {
   MODULE_ACTIONS_SETTINGS: '/actions/settings',
 }
 
-export const pageTitleMap = {
+export const pageTitlesMap = {
   [Paths.NOT_FOUND]: 'Not found',
   [Paths.HOME]: 'Choose module',
   [Paths.MODULE_ACTIONS]: 'Модуль действий'

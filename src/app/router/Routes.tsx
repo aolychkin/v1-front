@@ -1,6 +1,6 @@
 import { HomePage } from "pages/modules/Home";
 import { PageNotFound } from "pages/not-found/NotFound";
-import { Paths } from "shared/config/path";
+import { Paths } from "shared/config/paths";
 import { LayoutMain } from "widgets/layout-main";
 import { LazyPages } from "app/router/LazyPages";
 import { PageBoards } from "pages/boards";

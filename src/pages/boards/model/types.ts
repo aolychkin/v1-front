@@ -5,7 +5,7 @@ export type TCard = {
   id: string;
   meta: TCardMeta;
   fields: TCardField[];
-  activity?: string[];
+  // activity?: string[];
 };
 export type TCardMeta = {
   type: string;
@@ -18,7 +18,7 @@ export type TCardMeta = {
   createdAt?: string;
   updatedAt?: string;
   updatedBy?: string;
-  updatedItem?: string;
+  // updatedItem?: string;
 }
 
 //TODO: !!! Хранить только field Id, value и visual

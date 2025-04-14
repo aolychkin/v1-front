@@ -2,7 +2,7 @@ import GlobalStyles from '@mui/joy/GlobalStyles';
 import { Sheet, List, ListItem, ListItemButton, ListItemContent, Typography } from '@mui/joy';
 import { BookmarkCheck, FolderOpenDot, Home, ListChecks, Settings, SquareKanban } from 'lucide-react';
 import { SidebarMenuItem } from './ui/menu-item/menu-item';
-import { Paths } from 'shared/config/path';
+import { Paths } from 'shared/config/paths';
 
 export const Sidebar = () => {
   const iconSize = 16

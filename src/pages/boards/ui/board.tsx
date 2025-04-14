@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionGroup, AccordionSummary, Avatar, Card, CardContent, ListItem, ListItemContent, ListItemDecorator, Sheet, Stack, Tab, TabList, TabPanel, Tabs, Typography } from "@mui/joy"
-import { TCard, TColumn, objToTCard, objToTColumn } from "../model/types";
+import { TCard, objToTCard, objToTColumn } from "../model/types";
 import { ActionColumn } from "./column";
 import { getMockData } from "../model/mocks";
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
@@ -10,6 +10,8 @@ import IconButton from '@mui/joy/IconButton'
 import { Columns3, List, RectangleHorizontal, Save, Text, SaveOff, Settings, SquareKanban } from "lucide-react";
 import { UIBorderRadius } from "shared/ui/styles";
 import { BoardSetting } from "./board-settings";
+import { useBoardData } from "../api/hooks";
+import { TColumn } from "../model/board_pb";
 
 //TODO: сделать настройку кастомную карточек и ее полей, настройку колонок + группировки
 //TODO BUG: если тянуть карточку за граница экрана (на вкладки браузера), то появляется ошибка
@@ -72,12 +74,16 @@ export const ActionBoard = () => {
     });
   }, []);
 
+  const { data: board, isFetching } = useBoardData()
+  console.log(board, isFetching)
+
   return (
     <Stack direction='column' spacing={2} sx={{ marginX: '16px' }}>
       <BoardSetting />
       <Stack direction='row' spacing={2}>
         {
-          data.columns.map((col: TColumn) => (
+          board && board.board && board.board.columnsList &&
+          board?.board?.columnsList.map((col: TColumn.AsObject) => (
             <ActionColumn key={col.id} column={col} cards={data.cards.filter((item: TCard) => item.meta.columnID === col.id).sort((a, b) => a.meta.order - b.meta.order)} />
           ))
         }

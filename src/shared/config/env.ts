@@ -1,0 +1,1 @@
+export const ROOT_HOST = process.env.ROOT_HOST ?? 'localhost';

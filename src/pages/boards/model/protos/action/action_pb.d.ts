@@ -51,6 +51,56 @@ export namespace GetActionsByBoardResponse {
   }
 }
 
+export class ReorderActionsOnBoardRequest extends jspb.Message {
+  getCardId(): string;
+  setCardId(value: string): void;
+
+  getNewRank(): number;
+  setNewRank(value: number): void;
+
+  getColumnId(): string;
+  setColumnId(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ReorderActionsOnBoardRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ReorderActionsOnBoardRequest): ReorderActionsOnBoardRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ReorderActionsOnBoardRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ReorderActionsOnBoardRequest;
+  static deserializeBinaryFromReader(message: ReorderActionsOnBoardRequest, reader: jspb.BinaryReader): ReorderActionsOnBoardRequest;
+}
+
+export namespace ReorderActionsOnBoardRequest {
+  export type AsObject = {
+    cardId: string,
+    newRank: number,
+    columnId: string,
+  }
+}
+
+export class ReorderActionsOnBoardResponse extends jspb.Message {
+  clearCardsList(): void;
+  getCardsList(): Array<DTOCard>;
+  setCardsList(value: Array<DTOCard>): void;
+  addCards(value?: DTOCard, index?: number): DTOCard;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ReorderActionsOnBoardResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ReorderActionsOnBoardResponse): ReorderActionsOnBoardResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ReorderActionsOnBoardResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ReorderActionsOnBoardResponse;
+  static deserializeBinaryFromReader(message: ReorderActionsOnBoardResponse, reader: jspb.BinaryReader): ReorderActionsOnBoardResponse;
+}
+
+export namespace ReorderActionsOnBoardResponse {
+  export type AsObject = {
+    cardsList: Array<DTOCard.AsObject>,
+  }
+}
+
 export class DTOCard extends jspb.Message {
   getId(): string;
   setId(value: string): void;

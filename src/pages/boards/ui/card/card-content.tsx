@@ -63,12 +63,16 @@ const renderSlotSwitch = ({ param }: { param: string }) => {
 // }
 
 //TODO: как перерисовывать только доску при перетаскивании карточек на доске?
-
+//TODO: ключ и номер карточки
 export const ActionCardContent = (
   {
-    card
+    card,
+    prevRank,
+    nextRank,
   }: {
-    card: TCard
+    card: TCard;
+    prevRank: number;
+    nextRank: number;
   }
 ) => {
   return (
@@ -77,7 +81,7 @@ export const ActionCardContent = (
         <ActionCardRow slots={row.slots} card={card} />
       ))
       }*/}
-      <Typography level='title-md'>{card.id}, column:{card.action.stepId}, order {card.order}</Typography>
+      <Typography level='title-md'>{card.action.actionNum}, column:{card.columnId}, order {card.order}, prev: {prevRank}, next: {nextRank}</Typography>
     </CardContent>
   )
 }

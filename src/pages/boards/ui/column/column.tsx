@@ -44,6 +44,7 @@ export const ActionColumn = (
 
     function setIsCardOver({ data, location }: { data: TCard; location: DragLocationHistory }) {
       const innerMost = location.current.dropTargets[0];
+      // console.log('innerMost', innerMost)
       //Есть целью является конкретная карточка, а не колонка в целом
       const isOverChildCard = Boolean(innerMost && innerMost.data.type === 'card');
 
@@ -114,8 +115,13 @@ export const ActionColumn = (
         }}
       >
         {
-          cards.map((card: TCard) => (
-            <ActionCard key={card.id} card={card} />
+          cards.map((card: TCard, i: number, array: TCard[]) => (
+            <ActionCard
+              key={card.id}
+              card={card}
+              prevRank={array[i - 1] ? array[i - 1].order : card.order - 65536}
+              nextRank={array[i + 1] ? array[i + 1].order : card.order + 65536}
+            />
           ))
         }
         {

@@ -1,5 +1,10 @@
 import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types";
 
+export type TCardMeta = {
+  prevRank: number,
+  nextRank: number,
+}
+
 //TODO: Убрать логику на фронте. 
 //TODO: БЛЯЯЯТЬ. Добавить воркфлоу
 export type TCard = {
@@ -20,7 +25,7 @@ export type TAction = {
 export type TActionField = {
   id: string,
   value: string,
-  configId: string,
+  configId: string, //TODO: это именно Кард конфиг? (визуальный конфиг) НЕТ! TFieldConfig - этот.
 }
 
 
@@ -37,7 +42,7 @@ export type TFieldType = {
   name: string,
   alias: string,
   isCustom: boolean,
-  availableSizes: string[],
+  availableSizes: string[]
 }
 
 

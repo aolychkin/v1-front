@@ -4,33 +4,42 @@
 var action_pb = require("./action_pb");
 var grpc = require("@improbable-eng/grpc-web").grpc;
 
-var Action = (function () {
-  function Action() {}
-  Action.serviceName = "action.Action";
-  return Action;
+var ActionService = (function () {
+  function ActionService() {}
+  ActionService.serviceName = "action.ActionService";
+  return ActionService;
 }());
 
-Action.GetActionsByBoard = {
+ActionService.GetActionsByBoard = {
   methodName: "GetActionsByBoard",
-  service: Action,
+  service: ActionService,
   requestStream: false,
   responseStream: false,
   requestType: action_pb.GetActionsByBoardRequest,
   responseType: action_pb.GetActionsByBoardResponse
 };
 
-exports.Action = Action;
+ActionService.ReorderActionsOnBoard = {
+  methodName: "ReorderActionsOnBoard",
+  service: ActionService,
+  requestStream: false,
+  responseStream: false,
+  requestType: action_pb.ReorderActionsOnBoardRequest,
+  responseType: action_pb.ReorderActionsOnBoardResponse
+};
 
-function ActionClient(serviceHost, options) {
+exports.ActionService = ActionService;
+
+function ActionServiceClient(serviceHost, options) {
   this.serviceHost = serviceHost;
   this.options = options || {};
 }
 
-ActionClient.prototype.getActionsByBoard = function getActionsByBoard(requestMessage, metadata, callback) {
+ActionServiceClient.prototype.getActionsByBoard = function getActionsByBoard(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  var client = grpc.unary(Action.GetActionsByBoard, {
+  var client = grpc.unary(ActionService.GetActionsByBoard, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -57,5 +66,36 @@ ActionClient.prototype.getActionsByBoard = function getActionsByBoard(requestMes
   };
 };
 
-exports.ActionClient = ActionClient;
+ActionServiceClient.prototype.reorderActionsOnBoard = function reorderActionsOnBoard(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(ActionService.ReorderActionsOnBoard, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+exports.ActionServiceClient = ActionServiceClient;
 

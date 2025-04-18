@@ -1,4 +1,5 @@
 import { TAction, TActionField, TCard, TColumn } from "pages/boards/model"
+import { TCardMeta } from "pages/boards/model/types/action"
 
 export const objToTCard = (item: any) => {
   try {
@@ -20,6 +21,18 @@ export const objToTCard = (item: any) => {
   } catch (e) {
     console.log("[ERROR] func objToTCard())", e, item)
     return <TCard>{}
+  }
+}
+
+export const objToTCardMeta = (item: any) => {
+  try {
+    return <TCardMeta>{
+      prevRank: item.prevRank,
+      nextRank: item.nextRank,
+    }
+  } catch (e) {
+    console.log("[ERROR] func objToTCard())", e, item)
+    return <TCardMeta>{}
   }
 }
 

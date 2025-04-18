@@ -1,5 +1,29 @@
 import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types";
 import { TBoard, TCard, TColumn } from "../model";
+import { useReorderCards } from "../api/hooks";
+
+// export const ReorderThisBitch = ({
+//   currentCard,
+//   targetCard,
+//   edge
+// }: {
+//   currentCard: TCard;
+//   targetCard: TCard;
+//   edge: Edge | null
+// }) => {
+//   const { cardsData } = useReorderCards({
+//     // cardsData = UseReorderCards({
+//     current_card_id: currentCard.id,
+//     current_card_rank: currentCard.order,
+//     target_card_id: targetCard.id,
+//     target_card_rank: targetCard.order,
+//     edge: edge,
+//     isCorner: false,
+//   })
+
+//   return cardsData
+// }
+
 
 //TODO: если reorder отличается от серверного, то перерисовать, если нет, то нет
 export const reorderCardsWithEdge = ({

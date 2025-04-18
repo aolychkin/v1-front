@@ -4,18 +4,28 @@
 import * as action_pb from "./action_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 
-type ActionGetActionsByBoard = {
+type ActionServiceGetActionsByBoard = {
   readonly methodName: string;
-  readonly service: typeof Action;
+  readonly service: typeof ActionService;
   readonly requestStream: false;
   readonly responseStream: false;
   readonly requestType: typeof action_pb.GetActionsByBoardRequest;
   readonly responseType: typeof action_pb.GetActionsByBoardResponse;
 };
 
-export class Action {
+type ActionServiceReorderActionsOnBoard = {
+  readonly methodName: string;
+  readonly service: typeof ActionService;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof action_pb.ReorderActionsOnBoardRequest;
+  readonly responseType: typeof action_pb.ReorderActionsOnBoardResponse;
+};
+
+export class ActionService {
   static readonly serviceName: string;
-  static readonly GetActionsByBoard: ActionGetActionsByBoard;
+  static readonly GetActionsByBoard: ActionServiceGetActionsByBoard;
+  static readonly ReorderActionsOnBoard: ActionServiceReorderActionsOnBoard;
 }
 
 export type ServiceError = { message: string, code: number; metadata: grpc.Metadata }
@@ -46,7 +56,7 @@ interface BidirectionalStream<ReqT, ResT> {
   on(type: 'status', handler: (status: Status) => void): BidirectionalStream<ReqT, ResT>;
 }
 
-export class ActionClient {
+export class ActionServiceClient {
   readonly serviceHost: string;
 
   constructor(serviceHost: string, options?: grpc.RpcOptions);
@@ -58,6 +68,15 @@ export class ActionClient {
   getActionsByBoard(
     requestMessage: action_pb.GetActionsByBoardRequest,
     callback: (error: ServiceError|null, responseMessage: action_pb.GetActionsByBoardResponse|null) => void
+  ): UnaryResponse;
+  reorderActionsOnBoard(
+    requestMessage: action_pb.ReorderActionsOnBoardRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: action_pb.ReorderActionsOnBoardResponse|null) => void
+  ): UnaryResponse;
+  reorderActionsOnBoard(
+    requestMessage: action_pb.ReorderActionsOnBoardRequest,
+    callback: (error: ServiceError|null, responseMessage: action_pb.ReorderActionsOnBoardResponse|null) => void
   ): UnaryResponse;
 }
 

@@ -24,11 +24,15 @@ const idle: TCardState = { type: "idle" }
 const Display = (
   {
     card,
+    prevRank,
+    nextRank,
     state,
     outerRef,
     innerRef,
   }: {
     card: TCard;
+    prevRank: number;
+    nextRank: number;
     state: TCardState;
     outerRef?: RefObject<HTMLDivElement | null>;
     innerRef?: RefObject<HTMLDivElement | null>;
@@ -40,7 +44,7 @@ const Display = (
       {state.type === 'is-over' && state.closestEdge === 'top' ? (
         <CardShadow cardSpacing={cardSpacing} />
       ) : null}
-      <Card ref={innerRef}
+      <Card ref={innerRef} orientation='vertical'
         sx={{
           marginY: cardSpacing,
           ...(state.type === 'preview' &&
@@ -53,7 +57,7 @@ const Display = (
             opacity: 0.3
           })
         }}>
-        <ActionCardContent card={card} />
+        <ActionCardContent card={card} prevRank={prevRank} nextRank={nextRank} />
       </Card>
       {
         state.type === 'is-over' && state.closestEdge === 'bottom' ? (
@@ -67,9 +71,13 @@ const Display = (
 // TODO: Добавить конфигурацию карточки
 export const ActionCard = (
   {
-    card
+    card,
+    prevRank,
+    nextRank,
   }: {
-    card: TCard
+    card: TCard;
+    prevRank: number;
+    nextRank: number;
   }
 ) => {
   const [state, setState] = useState<TCardState>(idle);
@@ -109,7 +117,7 @@ export const ActionCard = (
         element: outer,
         getIsSticky: () => true,
         getData: ({ element, input }) => {
-          const data = { ...card, type: "card" }
+          const data = { ...card, type: "card", prevRank, nextRank }
           return attachClosestEdge(data, { element, input, allowedEdges: ['top', 'bottom'] });
         },
         onDragEnter({ source, self }) {
@@ -156,11 +164,11 @@ export const ActionCard = (
 
   return (
     <>
-      <Display outerRef={outerRef} innerRef={innerRef} state={state} card={card} />
+      <Display outerRef={outerRef} innerRef={innerRef} state={state} card={card} prevRank={prevRank} nextRank={nextRank} />
       {
         //TODO: Внести превью в компонент колонки?
         state.type === "preview"
-          ? createPortal(<Display state={state} card={card}></Display>, state.container)
+          ? createPortal(<Display state={state} card={card} prevRank={prevRank} nextRank={nextRank}></Display>, state.container)
           : null
       }
     </>

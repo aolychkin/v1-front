@@ -20,7 +20,7 @@ import { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/type
 import { UIBorderRadius, UIColor } from "shared/ui/styles";
 import { objToTCard } from "pages/boards/lib";
 import { TColumn, TCard } from "pages/boards/model";
-import { TColumnState } from "pages/boards/model/types/action";
+import { TColumnState, TFieldConfig } from "pages/boards/model/types/action";
 
 const idle: TColumnState = { type: 'column-idle' }
 
@@ -30,9 +30,11 @@ export const ActionColumn = (
   {
     column,
     cards,
+    fieldConfigs,
   }: {
     column: TColumn;
     cards: TCard[];
+    fieldConfigs: TFieldConfig[]
   }
 ) => {
   const [state, setState] = useState<TColumnState>(idle);
@@ -121,6 +123,7 @@ export const ActionColumn = (
               card={card}
               prevRank={array[i - 1] ? array[i - 1].order : card.order - 65536}
               nextRank={array[i + 1] ? array[i + 1].order : card.order + 65536}
+              fieldConfigs={fieldConfigs}
             />
           ))
         }

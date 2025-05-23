@@ -1,6 +1,9 @@
 import { Card, CardContent, Sheet, Stack, Typography } from "@mui/joy"
 import { UIColor } from "shared/ui/styles"
-import { TCard } from "pages/boards/model"
+import { TCard, TFieldConfig } from "pages/boards/model"
+import { CardDebugMode } from "../card/content-modes/debug-mod"
+import { CardConfigEditorMode } from "../card/content-modes/config-editor-mod"
+import { CardBoardMode } from "../card/content-modes/board-mod"
 
 // const ActionCardSlot = () => { }
 
@@ -62,29 +65,30 @@ const renderSlotSwitch = ({ param }: { param: string }) => {
 //   )
 // }
 
-//TODO: как перерисовывать только доску при перетаскивании карточек на доске?
-//TODO: ключ и номер карточки
-export const ActionCardContent = (
-  {
-    card,
-    prevRank,
-    nextRank,
-  }: {
-    card: TCard;
-    prevRank: number;
-    nextRank: number;
-  }
-) => {
-  return (
-    <CardContent>
-      {/* {fields.map((field) => (
-        <ActionCardRow slots={row.slots} card={card} />
-      ))
-      }*/}
-      <Typography level='title-md'>{card.action.actionNum}, column:{card.columnId}, order {card.order}, prev: {prevRank}, next: {nextRank}</Typography>
-    </CardContent>
-  )
-}
+// //TODO: как перерисовывать только доску при перетаскивании карточек на доске?
+// //TODO: ключ и номер карточки
+// export const ActionCardContent = (
+//   {
+//     card,
+//     prevRank,
+//     nextRank,
+//     fieldConfigs,
+//     isConfigEditor,
+//     isDebugMode,
+//   }: {
+//     card: TCard;
+//     revRank: number;
+//     nextRank: number;
+//     fieldConfigs: TFieldConfig[];
+//     isConfigEditor?: boolean;
+//     isDebugMode?: boolean;
+//   }
+// ) => {
+//   return (
+    
+//   )
+// }
+
 // export const ActionCardContent = (
 //   {
 //     fields,

@@ -14,10 +14,12 @@ import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-d
 import invariant from "tiny-invariant";
 import { createPortal } from "react-dom";
 import { CardShadow } from "./card-shadow";
-import { ActionCardContent } from "./card-content";
 import { objToTCard } from "pages/boards/lib";
 import { TCard } from "pages/boards/model";
-import { TCardState } from "pages/boards/model/types/action";
+import { TCardState, TFieldConfig } from "pages/boards/model/types/action";
+import { CardBoardMode } from "./content-modes/board-mod";
+import { CardConfigEditorMode } from "./content-modes/config-editor-mod";
+import { CardDebugMode } from "./content-modes/debug-mod";
 
 const idle: TCardState = { type: "idle" }
 
@@ -26,16 +28,22 @@ const Display = (
     card,
     prevRank,
     nextRank,
+    fieldConfigs,
     state,
     outerRef,
     innerRef,
+    isConfigEditor,
+    isDebugMode,
   }: {
     card: TCard;
     prevRank: number;
     nextRank: number;
+    fieldConfigs: TFieldConfig[]
     state: TCardState;
     outerRef?: RefObject<HTMLDivElement | null>;
     innerRef?: RefObject<HTMLDivElement | null>;
+    isConfigEditor?: boolean;
+    isDebugMode?: boolean;
   }
 ) => {
   var cardSpacing = "8px"
@@ -47,6 +55,7 @@ const Display = (
       <Card ref={innerRef} orientation='vertical'
         sx={{
           marginY: cardSpacing,
+          width: "314px",
           ...(state.type === 'preview' &&
           {
             opacity: 0.5,
@@ -57,7 +66,21 @@ const Display = (
             opacity: 0.3
           })
         }}>
-        <ActionCardContent card={card} prevRank={prevRank} nextRank={nextRank} />
+        <CardContent>
+          {
+            isDebugMode
+              ? <CardDebugMode card={card} prevRank={prevRank} nextRank={nextRank} />
+              : isConfigEditor
+                ? <Stack direction='row' justifyContent='space-between'>
+                  {
+                    Array.from(Array(12).keys()).map((item: number) => (
+                      <CardConfigEditorMode item={item} fieldConfigs={fieldConfigs} />
+                    ))
+                  }
+                </Stack>
+                : <CardBoardMode card={card} />
+          }
+        </CardContent>
       </Card>
       {
         state.type === 'is-over' && state.closestEdge === 'bottom' ? (
@@ -74,10 +97,16 @@ export const ActionCard = (
     card,
     prevRank,
     nextRank,
+    fieldConfigs,
+    isConfigEditor,
+    isDebugMode,
   }: {
     card: TCard;
     prevRank: number;
     nextRank: number;
+    fieldConfigs: TFieldConfig[];
+    isConfigEditor?: boolean;
+    isDebugMode?: boolean;
   }
 ) => {
   const [state, setState] = useState<TCardState>(idle);
@@ -88,6 +117,10 @@ export const ActionCard = (
     const outer = outerRef.current;
     const inner = innerRef.current;
     invariant(outer && inner);
+
+    if (isConfigEditor) {
+      return
+    }
 
     return combine(
       draggable({
@@ -117,7 +150,7 @@ export const ActionCard = (
         element: outer,
         getIsSticky: () => true,
         getData: ({ element, input }) => {
-          const data = { ...card, type: "card", prevRank, nextRank }
+          const data = { ...card, type: "card", prevRank, nextRank, isConfigEditor }
           return attachClosestEdge(data, { element, input, allowedEdges: ['top', 'bottom'] });
         },
         onDragEnter({ source, self }) {
@@ -162,13 +195,14 @@ export const ActionCard = (
     );
   }, [card]);
 
+
   return (
     <>
-      <Display outerRef={outerRef} innerRef={innerRef} state={state} card={card} prevRank={prevRank} nextRank={nextRank} />
+      <Display outerRef={outerRef} innerRef={innerRef} state={state} card={card} prevRank={prevRank} nextRank={nextRank} fieldConfigs={fieldConfigs} isConfigEditor={isConfigEditor} />
       {
         //TODO: Внести превью в компонент колонки?
         state.type === "preview"
-          ? createPortal(<Display state={state} card={card} prevRank={prevRank} nextRank={nextRank}></Display>, state.container)
+          ? createPortal(<Display state={state} card={card} prevRank={prevRank} nextRank={nextRank} fieldConfigs={fieldConfigs} isConfigEditor={isConfigEditor}></Display>, state.container)
           : null
       }
     </>

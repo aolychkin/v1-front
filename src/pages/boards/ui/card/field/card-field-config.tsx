@@ -45,7 +45,13 @@ export const CardFieldConfig = (
         </ListItemContent>
       </AccordionSummary>
       <AccordionDetails>
-        <Card>
+        <Card
+          sx={{
+            width: "314px",
+            py: "8px"
+          }}
+          size='md'
+        >
           <CardContent>
             {
               type && type.availableSizes.map((size) => (

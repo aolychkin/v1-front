@@ -1,15 +1,16 @@
-import { Stack, IconButton, Typography, Tabs, TabList, Tab, ListItemDecorator, TabPanel, Sheet, Card, AccordionGroup, Accordion, AccordionSummary, AccordionDetails, CardContent, Avatar, ListItemContent, accordionSummaryClasses, accordionDetailsClasses, Box } from "@mui/joy"
+import { Stack, IconButton, Typography, Tabs, TabList, Tab, ListItemDecorator, TabPanel, Sheet, Card, AccordionGroup, Accordion, AccordionSummary, AccordionDetails, CardContent, Avatar, ListItemContent, accordionSummaryClasses, accordionDetailsClasses, Box, Button } from "@mui/joy"
 import { Settings, SquareKanban, Columns3, RectangleHorizontal, List, Text, Save } from "lucide-react"
 import { UIBorderRadius } from "shared/ui/styles"
-import { TFieldConfig } from "pages/boards/model"
+import { TCard, TFieldConfig } from "pages/boards/model"
 import { CardFieldConfig } from "../card/field/card-field-config"
-import { ActionBoard } from "./cell"
-import { FieldTooltip } from "./field-tooltip"
+import { ActionCard } from "../card/card"
 
 export const BoardSetting = (
   {
+    card,
     fieldConfigs,
   }: {
+    card: TCard
     fieldConfigs: TFieldConfig[]
   }
 ) => {
@@ -54,20 +55,9 @@ export const BoardSetting = (
             IndicatorPlacement <b>Right</b>
           </TabPanel>
           <TabPanel value={2}>
-            <Stack direction='row' spacing={2}>
+            <Stack direction='column' spacing={2}>
               <Sheet variant='plain'>
-                <Card sx={{ margin: '8px', width: '314px' }} size="md">
-                  <CardContent>
-                    <Stack direction='row' justifyContent='space-between'>
-                      {
-                        Array.from(Array(12).keys()).map((item: number) => (
-                          <ActionBoard item={item} fieldConfigs={fieldConfigs} />
-                        ))
-                      }
-                    </Stack>
-                  </CardContent>
-                  {/* <ActionCardContent isConstruct fields={data.fields} /> */}
-                </Card>
+                <ActionCard card={card} prevRank={0} nextRank={0} fieldConfigs={fieldConfigs} isConfigEditor={true} />
               </Sheet>
               {/* TODO: где-то должно и глобально управляться, отображаться все доступные шаблоны */}
               {/* TODO: сделать разделение по категориям сворачиваемым + индикатор используемости в чипе (0/4).
@@ -76,7 +66,12 @@ export const BoardSetting = (
                   - мета данные
                   - поля обязательные
                   - кастомные поля */}
-              <FieldTooltip fieldConfigs={fieldConfigs} />
+              {/* <FieldTooltip fieldConfigs={fieldConfigs} /> */}
+              <Stack direction='row' spacing={2} alignItems={'center'} justifyContent={'flex-start'} sx={{ paddingX: '8px' }}>
+                <Typography level='body-sm'>Черновики: 1</Typography>
+                <Typography level='body-sm'>Шаблоны: 5</Typography>
+                <Button>Сохранить</Button>
+              </Stack>
             </Stack>
           </TabPanel>
         </Tabs>

@@ -112,6 +112,7 @@ export const ActionBoard = () => {
           console.log("no targetItem in func ActionBoard()")
           return
         }
+
         if (targetItem.data.type === 'card') {
           const targetCard = objToTCard(targetItem.data)
           const cardRanking = objToTCardMeta(targetItem.data)
@@ -166,7 +167,7 @@ export const ActionBoard = () => {
 
       {
         fieldsConfigData[0] && fieldsConfigData[0].id &&
-        <BoardSetting fieldConfigs={fieldsConfigData} />
+        <BoardSetting card={cardsData[0]} fieldConfigs={fieldsConfigData} />
       }
       <Stack direction='row' spacing={2}>
         {
@@ -176,6 +177,7 @@ export const ActionBoard = () => {
                 key={col.id}
                 column={col}
                 cards={cardsData.filter((item: TCard) => item.columnId === col.id).sort((a, b) => a.order - b.order)}
+                fieldConfigs={fieldsConfigData}
               />
             ))
             : (

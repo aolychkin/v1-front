@@ -1,57 +1,52 @@
-import { mapTBoard } from "../lib";
-import { mapTCard, mapTFieldConfig } from "../lib/transform/models/from-grpc";
-import { TBoard } from "../model";
-import { GetActionsByBoardRequest, ReorderActionsOnBoardRequest } from "../model/protos/action/action_pb";
-import { GetBoardRequest } from "../model/protos/board/board_pb";
-import { useGetBoardQuery, useGetCardsQuery, useReorderCardsQuery } from "./api";
+// import { mapTCard, mapTFieldConfig } from "../lib/transform/models/from-grpc";
+// import { GetActionsByBoardRequest, ReorderActionsOnBoardRequest } from "../model/protos/action/action_pb";
+import { GetBoardRequest, UpdateActionBoardOrderingRequest } from "../model/protos/board/board_pb";
+import { useGetBoardQuery, useUpdateActionBoardOrderingQuery } from "./api";
 
-export const useBoardData = () => {
+export const useGetBoard = () => {
   const request = new GetBoardRequest()
-  request.setId("0ee92905-b8f6-4e98-af47-25c416")
+  request.setId("b0458ecd-ab07-418a-8e73-02e5d5017052")
 
   const { data, isFetching, isLoading, isError, error } = useGetBoardQuery(request);
-
-  var board = data?.board ? mapTBoard(data?.board) : undefined
+  var board = data?.board ? data.board : undefined
 
   return { board, isFetching, isLoading, isError, error };
 }
 
-export const useCardsData = () => {
-  const request = new GetActionsByBoardRequest()
-  request.setBoardId("0ee92905-b8f6-4e98-af47-25c416")
+// export const useCardsData = () => {
+//   const request = new GetBoardRequest()
+//   request.setId("b6565751-c7d0-4d26-a690-e98251f96b0c")
 
-  const { data, isFetching, isLoading, isError, error } = useGetCardsQuery(request);
+//   const { data, isFetching, isLoading, isError, error } = useGetBoardQuery(request);
 
-  var cards = data?.cardsList ? mapTCard(data?.cardsList) : undefined
-  var fieldsConfig = data?.fieldConfigsList ? mapTFieldConfig(data?.fieldConfigsList) : undefined
+//   // console.log("useCardsData", cards, fieldsConfig, isFetching, isLoading, isError, error)
 
-  // console.log("useCardsData", cards, fieldsConfig, isFetching, isLoading, isError, error)
-
-  return { cards, fieldsConfig, isFetching, isLoading, isError, error };
-}
+//   return { data, isFetching, isLoading, isError, error };
+// }
 
 
-export const useReorderCards = (
+export const useUpdateActionBoardOrdering = (
   {
-    card_id,
+    action_id,
     new_rank,
+    status_id,
     column_id,
   }: {
-    card_id: string;
+    action_id: string;
     new_rank: number;
+    status_id: string;
     column_id: string;
   }
 ) => {
-  const request = new ReorderActionsOnBoardRequest()
-  request.setCardId(card_id)
-  request.setNewRank(new_rank)
+  console.log(action_id, new_rank, status_id)
+  const request = new UpdateActionBoardOrderingRequest()
+  request.setActionId(action_id)
+  request.setRankValue(new_rank)
+  request.setStatusId(status_id)
   request.setColumnId(column_id)
 
-  const { data, isFetching, isLoading, isError, error } = useReorderCardsQuery(request);
+  const { data, isFetching, isLoading, isError, error } = useUpdateActionBoardOrderingQuery(request);
+  var board = data?.board ? data.board : undefined
 
-  var cardsData = data?.cardsList ? mapTCard(data?.cardsList) : undefined
-
-  // console.log("useReorderCards", cardsData, isFetching, isLoading, isError, error)
-
-  return { cardsData, isFetching, isLoading, isError, error };
+  return { board, isFetching, isLoading, isError, error };
 }

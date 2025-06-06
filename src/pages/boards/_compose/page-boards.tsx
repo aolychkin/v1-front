@@ -4,7 +4,6 @@ import { ActionCard } from "../ui/card/card"
 import { ActionColumn } from "../ui/column/column"
 
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { useBoardData } from "../api/hooks";
 
 
 // TODO: отправлять ID свимлейнов (группировка) + их стейт. 

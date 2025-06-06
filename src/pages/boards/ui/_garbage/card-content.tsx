@@ -1,9 +1,6 @@
 import { Card, CardContent, Sheet, Stack, Typography } from "@mui/joy"
 import { UIColor } from "shared/ui/styles"
-import { TCard, TFieldConfig } from "pages/boards/model"
 import { CardDebugMode } from "../card/content-modes/debug-mod"
-import { CardConfigEditorMode } from "../card/content-modes/config-editor-mod"
-import { CardBoardMode } from "../card/content-modes/board-mod"
 
 // const ActionCardSlot = () => { }
 

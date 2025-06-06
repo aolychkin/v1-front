@@ -14,12 +14,10 @@ import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-d
 import invariant from "tiny-invariant";
 import { createPortal } from "react-dom";
 import { CardShadow } from "./card-shadow";
-import { objToTCard } from "pages/boards/lib";
-import { TCard } from "pages/boards/model";
-import { TCardState, TFieldConfig } from "pages/boards/model/types/action";
-import { CardBoardMode } from "./content-modes/board-mod";
-import { CardConfigEditorMode } from "./content-modes/config-editor-mod";
+import { TCardDragData, TCardState, objToTCardDragData } from "pages/boards/model/types/action";
 import { CardDebugMode } from "./content-modes/debug-mod";
+import { TAction } from "pages/boards/model/types/board";
+import { DTOAction } from "pages/boards/model/protos/board/board_pb";
 
 const idle: TCardState = { type: "idle" }
 
@@ -28,17 +26,15 @@ const Display = (
     card,
     prevRank,
     nextRank,
-    fieldConfigs,
     state,
     outerRef,
     innerRef,
     isConfigEditor,
     isDebugMode,
   }: {
-    card: TCard;
+    card: DTOAction.AsObject;
     prevRank: number;
     nextRank: number;
-    fieldConfigs: TFieldConfig[]
     state: TCardState;
     outerRef?: RefObject<HTMLDivElement | null>;
     innerRef?: RefObject<HTMLDivElement | null>;
@@ -67,19 +63,21 @@ const Display = (
           })
         }}>
         <CardContent>
-          {
+          <CardDebugMode card={card} prevRank={prevRank} nextRank={nextRank} />
+          {/* {
             isDebugMode
               ? <CardDebugMode card={card} prevRank={prevRank} nextRank={nextRank} />
               : isConfigEditor
-                ? <Stack direction='row' justifyContent='space-between'>
-                  {
-                    Array.from(Array(12).keys()).map((item: number) => (
-                      <CardConfigEditorMode item={item} fieldConfigs={fieldConfigs} />
-                    ))
-                  }
-                </Stack>
-                : <CardBoardMode card={card} />
-          }
+                ? <CardConfigEditorMode fieldConfigs={fieldConfigs} />
+                // ? <Stack direction='row' justifyContent='space-between'>
+                //   {
+                //     Array.from(Array(12).keys()).map((item: number) => (
+                //       <CardConfigEditorMode item={item} fieldConfigs={fieldConfigs} />
+                //     ))
+                //   }
+                // </Stack>
+                : <CardBoardMode card={card} cardConfig={config} fieldConfigs={fieldConfigs} />
+          } */}
         </CardContent>
       </Card>
       {
@@ -97,14 +95,12 @@ export const ActionCard = (
     card,
     prevRank,
     nextRank,
-    fieldConfigs,
     isConfigEditor,
     isDebugMode,
   }: {
-    card: TCard;
+    card: DTOAction.AsObject;
     prevRank: number;
     nextRank: number;
-    fieldConfigs: TFieldConfig[];
     isConfigEditor?: boolean;
     isDebugMode?: boolean;
   }
@@ -122,10 +118,19 @@ export const ActionCard = (
       return
     }
 
+    var cardDragData = {
+      action_id: card.id,
+      status_id: card.status?.id,
+      column_id: card.columnId,
+      order: card.order,
+      prev_rank: prevRank,
+      next_rank: nextRank,
+    } as TCardDragData
+
     return combine(
       draggable({
         element: inner,
-        getInitialData: () => ({ card }),
+        getInitialData: () => ({ cardDragData }),
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({ // import this 
             getOffset: pointerOutsideOfPreview({ // import this
@@ -150,11 +155,11 @@ export const ActionCard = (
         element: outer,
         getIsSticky: () => true,
         getData: ({ element, input }) => {
-          const data = { ...card, type: "card", prevRank, nextRank, isConfigEditor }
+          const data = { cardDragData, type: "card", prevRank, nextRank, isConfigEditor }
           return attachClosestEdge(data, { element, input, allowedEdges: ['top', 'bottom'] });
         },
         onDragEnter({ source, self }) {
-          if (objToTCard(source.data.card).id === card.id) {
+          if (objToTCardDragData(source.data).action_id === card.id) {
             return;
           }
           const closestEdge = extractClosestEdge(self.data);
@@ -165,9 +170,14 @@ export const ActionCard = (
         },
         // source = передвигаемая карточка, self - принимающая
         onDrag({ source, self }) {
-          if (objToTCard(source.data.card).id === objToTCard(self.data).id) {
+          if (objToTCardDragData(source.data).action_id === objToTCardDragData(self.data).action_id) {
             return;
           }
+
+          // if (source.data.type === "card") {
+          //   return
+          // }
+
           const closestEdge = extractClosestEdge(self.data);
           if (!closestEdge) {
             return;
@@ -182,13 +192,14 @@ export const ActionCard = (
           });
         },
         onDragLeave({ source, self }) {
-          if (objToTCard(source.data.card).id === objToTCard(self.data).id) {
+          if (objToTCardDragData(source.data).action_id === objToTCardDragData(self.data).action_id) {
             setState({ type: 'is-dragging-and-left-self' });
             return;
           }
           setState(idle);
         },
         onDrop() {
+          console.log("onDrop Card")
           setState(idle);
         },
       }),
@@ -198,11 +209,11 @@ export const ActionCard = (
 
   return (
     <>
-      <Display outerRef={outerRef} innerRef={innerRef} state={state} card={card} prevRank={prevRank} nextRank={nextRank} fieldConfigs={fieldConfigs} isConfigEditor={isConfigEditor} />
+      <Display outerRef={outerRef} innerRef={innerRef} state={state} card={card} prevRank={prevRank} nextRank={nextRank} isConfigEditor={isConfigEditor} />
       {
         //TODO: Внести превью в компонент колонки?
         state.type === "preview"
-          ? createPortal(<Display state={state} card={card} prevRank={prevRank} nextRank={nextRank} fieldConfigs={fieldConfigs} isConfigEditor={isConfigEditor}></Display>, state.container)
+          ? createPortal(<Display state={state} card={card} prevRank={prevRank} nextRank={nextRank} isConfigEditor={isConfigEditor}></Display>, state.container)
           : null
       }
     </>
